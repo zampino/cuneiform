@@ -29,47 +29,6 @@ public class LibFunTest {
 	 * Actual tests
 	 */
 	
-	// TODO
-	// head returns car of list
-	// tail returns cdr of list
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void nullShouldBeList() {
-		assertTrue( isList( null ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void recordShouldNotBeList() {
-		
-		Record r;
-		
-		r = mock( Record.class );
-		assertFalse( isList( r ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void consShouldBeList() {
-		
-		Cons c;
-		
-		c = mock( Cons.class );
-		assertTrue( isList( c ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void constantShouldNotBeList() {
-		
-		Constant<String> s;
-		
-		s = new Constant<>( "bla" );
-
-		assertFalse( isList( s ) );
-	}
-		
 	@SuppressWarnings("static-method")
 	@Test
 	public void consShouldConstructList() {
@@ -81,7 +40,6 @@ public class LibFunTest {
 		
 		l = cons( term, null );
 		
-		assertTrue( isList( l ) );
 		assertEquals( term, l.getHead() );
 		assertNull( l.getTail() );		
 	}
@@ -98,7 +56,6 @@ public class LibFunTest {
 		term = mock( Term.class );
 		l = list( term );
 		
-		assertTrue( isList( l ) );
 		assertEquals( term, l.getHead() );
 		assertNull( l.getTail() );
 	}
