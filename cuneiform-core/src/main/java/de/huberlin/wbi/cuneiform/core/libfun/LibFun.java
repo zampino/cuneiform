@@ -12,6 +12,18 @@ public class LibFun {
 		return false;
 	}
 	
+	public static Cons list( Term... termVec ) {
+		
+		Cons result;
+		int i;
+		
+		result = null;
+		for( i = termVec.length-1; i >= 0; i-- )
+			result = cons( termVec[ i ], result );
+		
+		return result;
+	}
+	
 	public static Cons cons( Term head, Cons tail ) {
 		return new Cons( head, tail );
 	}
@@ -21,13 +33,21 @@ public class LibFun {
 		if( term == null )
 			return "[]";
 		
-		return term.toString();
+		return term.print();
+	}
+	
+	public static Constant<String> constantFrom( String s ) {
+		return new Constant<>( s );
+	}
+	
+	public static Constant<Integer> constantFrom( int i ) {
+		return new Constant<>( i );
 	}
 	
 	public static boolean unify( Term abstractTerm, Term concreteTerm ) {
 
 		if( concreteTerm instanceof Var )
-			throw new RuntimeException( "Concrete term must not contain variable: "+concreteTerm );
+			throw new UnexpectedVarException( "Concrete term must not contain variable: "+concreteTerm );
 		
 		if( abstractTerm == null ) {
 

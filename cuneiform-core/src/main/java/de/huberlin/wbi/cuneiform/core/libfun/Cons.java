@@ -1,6 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-public class Cons implements Term {
+public class Cons extends Term {
 	
 	private final Term head;
 	private final Cons tail;
@@ -19,10 +19,16 @@ public class Cons implements Term {
 	}
 	
 	@Override
-	public String toString() {
+	protected boolean unify(Term other) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected String print() {
 		
 		StringBuffer buf;
-				
+		
 		buf = new StringBuffer();
 				
 		buf.append( '[' ).append( LibFun.printTerm( head ) );
@@ -34,12 +40,5 @@ public class Cons implements Term {
 				.append( ',' )
 				.append( LibFun.printTerm( tail ).substring( 1 ) );
 		
-		return buf.toString();
-	}
-
-	@Override
-	public boolean unify(Term other) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		return buf.toString();	}
 }
