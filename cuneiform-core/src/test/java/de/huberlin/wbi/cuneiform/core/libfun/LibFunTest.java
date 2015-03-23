@@ -171,6 +171,54 @@ public class LibFunTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
+	public void nullShouldBeEqual() {
+		assertTrue( eq( null, null ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void nullNonNullShouldNotBeEqual() {
+		
+		Term t;
+		
+		t = mock( Term.class );
+		
+		assertFalse( eq( null, t ) );
+		assertFalse( eq( t, null ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void EqShouldReturnOnStringConstantWithEqualContent() {
+		
+		String content;
+		Term t1, t2;
+		
+		content = "bla";
+		
+		t1 = new Constant<>( content );
+		t2 = new Constant<>( content );
+		
+		assertTrue( eq( t1, t2 ) );
+		assertTrue( eq( t2, t1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void EqShouldReturnFalseOnDifferingStringConstants() {
+		
+		Term t1, t2;
+		
+		
+		t1 = new Constant<>( "bla" );
+		t2 = new Constant<>( "blub" );
+		
+		assertFalse( eq( t1, t2 ) );
+		assertFalse( eq( t2, t1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
 	public void unifyEmptyListShouldWork() {
 		assertTrue( unify( null, null ) );
 	}

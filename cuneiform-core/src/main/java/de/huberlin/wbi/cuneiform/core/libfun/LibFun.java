@@ -51,4 +51,16 @@ public class LibFun {
 		
 	}
 
+	public static boolean eq( Term a, Term b ) {
+		
+		if( a == null ) {
+
+			if( b == null )
+				return true;
+			
+			return false;
+		}
+		
+		return a.equals( b );
+	}
 }
