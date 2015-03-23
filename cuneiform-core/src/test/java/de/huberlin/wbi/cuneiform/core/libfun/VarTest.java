@@ -45,5 +45,5 @@ public class VarTest {
 		var = new Var( name );
 		
 		assertEquals( name, var.getName() );
-	}
+	}	
 }

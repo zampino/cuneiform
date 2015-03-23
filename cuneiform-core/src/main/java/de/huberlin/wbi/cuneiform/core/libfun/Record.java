@@ -1,6 +1,8 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-public class Record implements Term {
+import static de.huberlin.wbi.cuneiform.core.libfun.LibFun.printTerm;
+
+public class Record extends Term {
 
 	private final String symbol;
 	private final Term[] termVec;
@@ -29,9 +31,26 @@ public class Record implements Term {
 	}
 
 	@Override
-	public boolean unify(Term other) {
+	protected boolean unify(Term other) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	protected String print() {
+		
+		StringBuffer buf;
+		
+		buf = new StringBuffer();
+		
+		buf.append( '{' ).append( symbol );
+		
+		for( Term t : termVec )
+			buf.append( ',' ).append( printTerm( t ) );
+		
+		buf.append( '}' );
+		
+		return buf.toString();
 	}
 	
 	

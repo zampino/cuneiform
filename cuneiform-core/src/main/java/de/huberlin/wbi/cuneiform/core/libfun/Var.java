@@ -1,6 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-public class Var implements Term {
+public class Var extends Term {
 	
 	private final String name;
 	
@@ -23,8 +23,12 @@ public class Var implements Term {
 	}
 
 	@Override
-	public boolean unify(Term other) {
-		// TODO Auto-generated method stub
-		return false;
+	protected boolean unify( Term other ) {
+		return true;
+	}
+
+	@Override
+	protected String print() {
+		return name;
 	}
 }
