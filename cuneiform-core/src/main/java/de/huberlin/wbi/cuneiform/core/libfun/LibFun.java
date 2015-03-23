@@ -1,16 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
 public class LibFun {
-
-	@SuppressWarnings("unused")
-	public static boolean isList( Cons cons ) {
-		return true;
-	}
-	
-	@SuppressWarnings("unused")
-	public static boolean isList( Term term ) {		
-		return false;
-	}
 	
 	public static Cons list( Term... termVec ) {
 		
