@@ -31,4 +31,19 @@ public class Constant<T> extends Term {
 		
 		return content.toString();
 	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+		
+		if( !( obj instanceof Constant ) )
+			return false;
+		
+		return content.equals( ( ( Constant<?> )obj ).content );
+	}
+
+
+	@Override
+	public int hashCode() {
+		return content.hashCode();
+	}
 }

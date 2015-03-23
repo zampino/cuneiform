@@ -40,5 +40,40 @@ public class Cons extends Term {
 				.append( ',' )
 				.append( LibFun.printTerm( tail ).substring( 1 ) );
 		
-		return buf.toString();	}
+		return buf.toString();
+	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+		
+		Cons other;
+		
+		if( !( obj instanceof Cons ) )
+			return false;
+		
+		other = ( Cons )obj;
+		
+		if( head == null ) {
+			if( other.head != null )
+				return false;
+		}
+		else
+			if( !head.equals( other.head ) )
+				return false;
+		
+		if( tail == null ) {
+			if( other.tail != null )
+				return false;
+		}
+		else
+			if( !tail.equals( other.tail ) )
+				return false;
+		
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return 89785674;
+	}
 }

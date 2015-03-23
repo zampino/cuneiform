@@ -60,4 +60,19 @@ public class ConstantTest {
 		
 		assertEquals( content, c.getContent() );
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	@Parameters( method="getValidStringConstantContent" )
+	public void constantShouldBeEqualIfContentIsEqual( String content ) {
+		
+		Constant<String> c1;
+		Constant<String> c2;
+		
+		c1 = new Constant<>( content );
+		c2 = new Constant<>( content );
+		
+		assertTrue( c1.equals( c2 ) );
+		assertTrue( c2.equals( c1 ) );
+	}
 }
