@@ -219,7 +219,7 @@ public class LibFunTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void unifyEmptyListShouldWork() {
+	public void unifyEmptyListShouldReturnTrue() {
 		assertTrue( unify( null, null ) );
 	}
 	
@@ -237,4 +237,6 @@ public class LibFunTest {
 	public void unifyVarWithAnythingShouldReturnTrue( Term concreteTerm ) {
 		assertTrue( unify( new Var( "X" ), concreteTerm ) );
 	}
+	
+
 }

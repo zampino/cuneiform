@@ -1,6 +1,7 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
@@ -75,4 +76,33 @@ public class ConstantTest {
 		assertTrue( c1.equals( c2 ) );
 		assertTrue( c2.equals( c1 ) );
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	@Parameters( method="getValidStringConstantContent" )
+	public void unifyConstantWithEqualContentShouldReturnTrue( String content ) {
+		
+		Constant<String> c1, c2;
+		
+		c1 = new Constant<>( content );
+		c2 = new Constant<>( content );
+		
+		assertTrue( c1.unify( c2 ) );
+		assertTrue( c2.unify( c1 ) );
+		
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifyConstantWithNonEqualContentShouldReturnFalse() {
+		
+		Constant<String> c1, c2;
+		
+		c1 = new Constant<>( "bla" );
+		c2 = new Constant<>( "blub" );
+		
+		assertFalse( c1.unify( c2 ) );
+		assertFalse( c2.unify( c1 ) );
+	}
+
 }

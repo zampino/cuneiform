@@ -3,6 +3,7 @@ package de.huberlin.wbi.cuneiform.core.libfun;
 public class Var extends Term {
 	
 	private final String name;
+	private Term specializedValue;
 	
 	public Var( String name ) {
 		
@@ -24,11 +25,18 @@ public class Var extends Term {
 
 	@Override
 	protected boolean unify( Term other ) {
-		return true;
+		
+		specializedValue = other;
+		
+		return true;		
 	}
 
 	@Override
 	protected String print() {
 		return name;
+	}
+
+	public Object getSpecializedValue() {
+		return specializedValue;
 	}
 }

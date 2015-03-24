@@ -29,11 +29,53 @@ public class Record extends Term {
 	public int length() {
 		return termVec.length;
 	}
+	
+	@Override
+	public boolean equals( Object obj ) {
+		
+		Record other;
+		int i;
+		
+		if( !( obj instanceof Record ) )
+			return false;
+		
+		other = ( Record )obj;
+		
+		if( !symbol.equals( other.symbol ) )
+			return false;
+		
+		if( termVec.length != other.termVec.length )
+			return false;
+		
+		for( i = 0; i < termVec.length; i++ )
+			if( !LibFun.eq( termVec[ i ], other.termVec[ i ] ) )
+				return false;
+		
+		return true;
+	}
 
 	@Override
-	protected boolean unify(Term other) {
-		// TODO Auto-generated method stub
-		return false;
+	protected boolean unify( Term other ) {
+		
+		Record record;
+		int i;
+		
+		if( !( other instanceof Record ) )
+			return false;
+		
+		record = ( Record )other;
+		
+		if( !symbol.equals( record.symbol ) )
+			return false;
+			
+		if( termVec.length != record.termVec.length )
+			return false;
+		
+		for( i = 0; i < termVec.length; i++ )
+			if( !LibFun.unify( termVec[ i ], record.termVec[ i ] ) )
+				return false;
+		
+		return true;
 	}
 
 	@Override
@@ -52,6 +94,9 @@ public class Record extends Term {
 		
 		return buf.toString();
 	}
-	
-	
+
+	@Override
+	public int hashCode() {
+		return symbol.hashCode();
+	}
 }

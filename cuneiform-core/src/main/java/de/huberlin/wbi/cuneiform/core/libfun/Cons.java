@@ -1,5 +1,7 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
+import de.huberlin.wbi.cuneiform.core.libfun.LibFun;
+
 public class Cons extends Term {
 	
 	private final Term head;
@@ -19,9 +21,19 @@ public class Cons extends Term {
 	}
 	
 	@Override
-	protected boolean unify(Term other) {
-		// TODO Auto-generated method stub
-		return false;
+	protected boolean unify( Term other ) {
+
+		Cons cons;
+		
+		if( !( other instanceof Cons ) )
+			return false;
+		
+		cons = ( Cons )other;
+		
+		if( !( LibFun.unify( head, cons.head ) ) )
+			return false;
+		
+		return LibFun.unify( tail, cons.tail );
 	}
 
 	@Override

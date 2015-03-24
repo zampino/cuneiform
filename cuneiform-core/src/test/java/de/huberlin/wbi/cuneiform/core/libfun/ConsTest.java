@@ -1,7 +1,7 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static de.huberlin.wbi.cuneiform.core.libfun.LibFun.*;
 
 import org.junit.Test;
@@ -152,5 +152,43 @@ public class ConsTest {
 		
 		assertNotEquals( c, null );
 		assertNotEquals( null, c );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifyShouldDeferTestToHeadAndTail() {
+		
+		Term h1, h2;
+		Cons t1, t2;
+		Cons c1, c2;
+		
+		h1 = mock( Term.class );
+		h2 = mock( Term.class );
+		t1 = mock( Cons.class );
+		t2 = mock( Cons.class );
+		
+		c1 = new Cons( h1, t1 );
+		c2 = new Cons( h2, t2 );
+		
+		when( h1.unify( h2 ) ).thenReturn( true );
+		when( t1.unify( t2 ) ).thenReturn( true );
+		
+		assertTrue( c1.unify( c2 ) );
+		
+		verify( h1 ).unify( h2 );
+		verify( t1 ).unify( t2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifyWithNonConsShouldReturnFalse() {
+		
+		Cons cons;
+		Constant<String> constant;
+		
+		cons = new Cons( mock( Term.class ), mock( Cons.class ) );
+		constant = new Constant<>( "bla" );
+		
+		assertFalse( cons.unify( constant ) );
 	}
 }
