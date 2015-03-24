@@ -1,6 +1,7 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
@@ -45,5 +46,23 @@ public class VarTest {
 		var = new Var( name );
 		
 		assertEquals( name, var.getName() );
-	}	
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifyShouldMemorizeBoundValue() {
+		
+		Term t;
+		Var var;
+		
+		t = mock( Term.class );
+
+		var = new Var( "X" );
+		assertTrue( var.unify( t ) );
+		assertEquals( t, var.getSpecializedValue() );
+	}
+	
+	// TODO:
+	// - disallow superseding of specialization
+	// - implement unspecializing of term
 }

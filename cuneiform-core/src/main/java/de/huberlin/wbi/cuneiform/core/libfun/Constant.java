@@ -19,8 +19,7 @@ public class Constant<T> extends Term {
 
 	@Override
 	protected boolean unify( Term other ) {
-		// TODO Auto-generated method stub
-		return false;
+		return equals( other );
 	}
 
 	@Override
@@ -34,7 +33,7 @@ public class Constant<T> extends Term {
 	
 	@Override
 	public boolean equals( Object obj ) {
-		
+				
 		if( !( obj instanceof Constant ) )
 			return false;
 		
