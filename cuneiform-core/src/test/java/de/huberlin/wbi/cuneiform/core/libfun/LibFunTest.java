@@ -1,7 +1,7 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static de.huberlin.wbi.cuneiform.core.libfun.LibFun.*;
 import junitparams.Parameters;
 import junitparams.JUnitParamsRunner;
@@ -238,5 +238,123 @@ public class LibFunTest {
 		assertTrue( unify( new Var( "X" ), concreteTerm ) );
 	}
 	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifyMultipleTimesWithEqualValueShouldReturnTrue() {
+		
+		Term t;
+		Var x;
+		Cons abstractList, concreteList;
+		
+		t = mock( Term.class );
+		x = new Var( "X" );
+		
+		abstractList = list( x, x );
+		concreteList = list( t, t );
+	
+		assertFalse( x.isSpecialized() );
+		assertTrue( unify( abstractList, concreteList ) );
+		assertTrue( x.isSpecialized() );
+		assertEquals( t, x.getSpecializedValue() );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifyMultipleTimesWithDifferentValueShouldReturnFalse() {
+		
+		Term t1, t2;
+		Var x;
+		Cons abstractList, concreteList;
+		
+		t1 = mock( Term.class );
+		t2 = mock( Term.class );
+		x = new Var( "X" );
+		
+		abstractList = list( x, x );
+		concreteList = list( t1, t2 );
+	
+		assertFalse( x.isSpecialized() );
+		assertFalse( unify( abstractList, concreteList ) );
+	}
 
+	@SuppressWarnings("static-method")
+	@Test
+	public void unspecializingVarAllowsNewUnification() {
+		
+		Term t1, t2;
+		Var x;
+		
+		t1 = mock( Term.class );
+		t2 = mock( Term.class );
+		
+		x = new Var( "X" );
+		
+		assertFalse( x.isSpecialized() );
+		assertTrue( unify( x, t1 ) );
+		assertTrue( x.isSpecialized() );
+		
+		x.unspecialize();
+		
+		assertFalse( x.isSpecialized() );
+		assertTrue( unify( x, t2 ) );
+		assertTrue( x.isSpecialized() );
+		
+		assertFalse( unify( x, t1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unspecializeIsHandedDownToVar() {
+		
+		Var var;
+		
+		var = mock( Var.class );
+		
+		unspecialize( var );
+		verify( var ).unspecialize();
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unspecializeDoesNotAffectEmptyList() {
+		unspecialize( null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unspecializeDoesNotAffectConstant() {
+		unspecialize( new Constant<>( "bla" ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unspecializeIsHandedDownThroughCons() {
+		
+		Term t;
+		Cons c1, c2;
+		
+		t = mock( Term.class );
+		c1 = mock( Cons.class );
+		
+		c2 = cons( t, c1 );
+		unspecialize( c2 );
+		
+		verify( t ).unspecialize();
+		verify( c1 ).unspecialize();
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unspecializeIsHandedDownThroughRecord() {
+		
+		Term t;
+		Record r;
+		
+		t = mock( Term.class );
+		r = new Record( "bla", t );
+		
+		unspecialize( r );
+		verify( t ).unspecialize();
+		
+	}
 }

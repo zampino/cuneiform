@@ -1,9 +1,12 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
+import static de.huberlin.wbi.cuneiform.core.libfun.LibFun.*;
+
 public class Var extends Term {
 	
 	private final String name;
 	private Term specializedValue;
+	private boolean isSpecial;
 	
 	public Var( String name ) {
 		
@@ -17,6 +20,7 @@ public class Var extends Term {
 			throw new IllegalArgumentException( "Variable name must start with capital letter: ["+name+"]" );
 
 		this.name = name;
+		isSpecial = false;
 	}
 
 	public String getName() {
@@ -26,7 +30,12 @@ public class Var extends Term {
 	@Override
 	protected boolean unify( Term other ) {
 		
+		if( isSpecial )
+			if( !eq( specializedValue, other ) )
+				return false;
+		
 		specializedValue = other;
+		isSpecial = true;
 		
 		return true;		
 	}
@@ -38,5 +47,13 @@ public class Var extends Term {
 
 	public Object getSpecializedValue() {
 		return specializedValue;
+	}
+
+	public boolean isSpecialized() {
+		return isSpecial;
+	}
+
+	protected void unspecialize() {
+		isSpecial = false;
 	}
 }

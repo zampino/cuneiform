@@ -63,4 +63,12 @@ public class LibFun {
 		
 		return a.equals( b );
 	}
+	
+	public static void unspecialize( Term term ) {
+		
+		if( term == null )
+			return;
+		
+		term.unspecialize();
+	}
 }
