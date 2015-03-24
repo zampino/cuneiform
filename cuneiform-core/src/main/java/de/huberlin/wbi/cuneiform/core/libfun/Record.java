@@ -1,6 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-import static de.huberlin.wbi.cuneiform.core.libfun.LibFun.printTerm;
+import de.huberlin.wbi.cuneiform.core.libfun.LibFun;
 
 public class Record extends Term {
 
@@ -88,7 +88,7 @@ public class Record extends Term {
 		buf.append( '{' ).append( symbol );
 		
 		for( Term t : termVec )
-			buf.append( ',' ).append( printTerm( t ) );
+			buf.append( ',' ).append( LibFun.printTerm( t ) );
 		
 		buf.append( '}' );
 		
@@ -98,5 +98,12 @@ public class Record extends Term {
 	@Override
 	public int hashCode() {
 		return symbol.hashCode();
+	}
+
+	@Override
+	protected void unspecialize() {
+		
+		for( Term t : termVec )
+			LibFun.unspecialize( t );
 	}
 }

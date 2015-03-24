@@ -62,6 +62,7 @@ public class VarTest {
 		assertEquals( t, var.getSpecializedValue() );
 	}
 	
+	
 	// TODO:
 	// - disallow superseding of specialization
 	// - implement unspecializing of term

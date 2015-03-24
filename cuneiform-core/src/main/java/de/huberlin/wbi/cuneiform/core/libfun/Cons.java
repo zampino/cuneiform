@@ -88,4 +88,11 @@ public class Cons extends Term {
 	public int hashCode() {
 		return 89785674;
 	}
+
+	@Override
+	protected void unspecialize() {
+		LibFun.unspecialize( head );
+		LibFun.unspecialize( tail );
+		
+	}
 }

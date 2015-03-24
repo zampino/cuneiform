@@ -1,7 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 

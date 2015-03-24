@@ -45,4 +45,11 @@ public class Constant<T> extends Term {
 	public int hashCode() {
 		return content.hashCode();
 	}
+
+
+	@Override
+	protected void unspecialize() {
+		// TODO Auto-generated method stub
+		
+	}
 }
