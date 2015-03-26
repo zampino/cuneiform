@@ -1,5 +1,9 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public class LibFun {
 	
 	public static Cons list( Term... termVec ) {
@@ -64,11 +68,64 @@ public class LibFun {
 		return a.equals( b );
 	}
 	
-	public static void unspecialize( Term term ) {
+	public static Term unspecialize( Term term ) {
 		
 		if( term == null )
-			return;
+			return null;
 		
 		term.unspecialize();
+		return term;
+	}
+	
+	public static Map<Term,Term> map() {
+		return Collections.unmodifiableMap( new HashMap<Term,Term>() );
+	}
+	
+	public static Map<Term,Term> map( Term key, Term value ) {
+		
+		Map<Term,Term> map;
+		
+		map = new HashMap<>();
+		map.put( key, value );
+		
+		return Collections.unmodifiableMap( map );
+	}
+	
+	public static Map<Term,Term> put( Term key, Term value, Map<Term,Term> map ) {
+		
+		Map<Term,Term> map1;
+		
+		map1 = new HashMap<>();
+		map1.putAll( map );
+		map1.put( key, value );
+		
+		return Collections.unmodifiableMap( map1 );
+	}
+	
+	public static Map<Term,Term> merge( Map<Term,Term> m1, Map<Term,Term> m2 ) {
+		
+		Map<Term,Term> m3;
+		
+		m3 = new HashMap<>();
+		
+		m3.putAll( m2 );
+		m3.putAll( m1 );
+		return Collections.unmodifiableMap( m3 );
+	}
+	
+	public static Term get( Term key, Map<Term,Term> map ) throws UnboundVarException {
+		
+		if( !map.containsKey( key ) )
+			throw new UnboundVarException( key );
+		
+		return map.get( key );
+	}
+	
+	public static Term get( Term key, Map<Term,Term> map, Term def ) {
+		
+		if( !map.containsKey( key ) )
+			return def;
+		
+		return map.get( key );
 	}
 }
