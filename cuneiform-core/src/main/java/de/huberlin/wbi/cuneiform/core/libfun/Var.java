@@ -53,6 +53,7 @@ public class Var extends Term {
 		return isSpecial;
 	}
 
+	@Override
 	protected void unspecialize() {
 		isSpecial = false;
 	}

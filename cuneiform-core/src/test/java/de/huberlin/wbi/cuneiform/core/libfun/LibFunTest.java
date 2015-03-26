@@ -3,6 +3,9 @@ package de.huberlin.wbi.cuneiform.core.libfun;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static de.huberlin.wbi.cuneiform.core.libfun.LibFun.*;
+
+import java.util.Map;
+
 import junitparams.Parameters;
 import junitparams.JUnitParamsRunner;
 
@@ -355,6 +358,115 @@ public class LibFunTest {
 		
 		unspecialize( r );
 		verify( t ).unspecialize();
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void mapReturnsEmptyMap() {
 		
+		Map<Term,Term> m;
+		
+		m = map();
+		assertTrue( m.isEmpty() );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void putReturnsNewMapWithNewEntry() throws UnboundVarException {
+		
+		Map<Term,Term> m1, m2;
+		Term key;
+		Term value;
+		
+		key = mock( Term.class );
+		value = mock( Term.class );
+		
+		
+		m1 = map();
+		assertTrue( m1.isEmpty() );
+		
+		m2 = put( key, value, m1 );
+		assertTrue( m1.isEmpty() );
+		assertEquals( 1, m2.size() );
+		assertEquals( value, get( key, m2 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void mapReturnsMapWithSingleEntry() throws UnboundVarException {
+		
+		Map<Term,Term> m;
+		Term key;
+		Term value;
+		
+		key = mock( Term.class );
+		value = mock( Term.class );
+		
+		m = map( key, value );
+		assertEquals( 1, m.size() );
+		assertEquals( value, get( key, m ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void mergeCombinesTwoMaps() throws UnboundVarException {
+		
+		Map<Term,Term> m1, m2, m3;
+		Term key1, key2, value1, value2;
+		
+		key1 = mock( Term.class );
+		key2 = mock( Term.class );
+		value1 = mock( Term.class );
+		value2 = mock( Term.class );
+		
+		m1 = map( key1, value1 );
+		m2 = map( key2, value2 );
+		
+		m3 = merge( m1, m2 );
+		assertEquals( 2, m3.size() );
+		assertEquals( value1, get( key1, m3 ) );
+		assertEquals( value2, get( key2, m3 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void mergeFirstShouldSupersedeSecond() throws UnboundVarException {
+		
+		Map<Term,Term> m1, m2, m3;
+		Term key, value1, value2;
+		
+		key = mock( Term.class );
+		value1 = mock( Term.class );
+		value2 = mock( Term.class );
+		
+		m1 = map( key, value1 );
+		m2 = map( key, value2 );
+		
+		m3 = merge( m1, m2 );
+		assertEquals( 1, m3.size() );
+		assertEquals( value1, get( key, m3 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=UnboundVarException.class )
+	public void getUnboundVarShouldThrowUve() throws UnboundVarException {
+		
+		Map<Term,Term> m;
+		
+		m = map();
+		get( mock( Term.class ), m );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void getUnboundVarWithDefaultShouldReturnDefault() {
+		
+		Map<Term,Term> m;
+		Term def;
+		
+		m = map();
+		def = mock( Term.class );
+		
+		assertEquals( def, get( mock( Term.class ), m, def ) );
 	}
 }
