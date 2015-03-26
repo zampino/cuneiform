@@ -131,11 +131,11 @@ public class LibFunTest {
 	@Test
 	public void printVarShouldReturnName() {
 		
-		Var v;
+		Placeholder v;
 		String name;
 		
 		name = "X";
-		v = new Var( name );
+		v = new Placeholder( name );
 		assertEquals( name, printTerm( v ) );
 	}
 	
@@ -227,10 +227,10 @@ public class LibFunTest {
 	}
 	
 	@SuppressWarnings("static-method")
-	@Test( expected=UnexpectedVarException.class )
+	@Test( expected=UnexpectedPlaceholderException.class )
 	@Parameters( method="getConcreteTerm" )
 	public void unifyAnythingWithVarShouldThrowUve( Term concreteTerm ) {
-		unify( concreteTerm, new Var( "Bla" ) );
+		unify( concreteTerm, new Placeholder( "Bla" ) );
 	}
 	
 	
@@ -238,7 +238,7 @@ public class LibFunTest {
 	@Test
 	@Parameters( method="getConcreteTerm" )
 	public void unifyVarWithAnythingShouldReturnTrue( Term concreteTerm ) {
-		assertTrue( unify( new Var( "X" ), concreteTerm ) );
+		assertTrue( unify( new Placeholder( "X" ), concreteTerm ) );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -246,11 +246,11 @@ public class LibFunTest {
 	public void unifyMultipleTimesWithEqualValueShouldReturnTrue() {
 		
 		Term t;
-		Var x;
+		Placeholder x;
 		Cons abstractList, concreteList;
 		
 		t = mock( Term.class );
-		x = new Var( "X" );
+		x = new Placeholder( "X" );
 		
 		abstractList = list( x, x );
 		concreteList = list( t, t );
@@ -266,12 +266,12 @@ public class LibFunTest {
 	public void unifyMultipleTimesWithDifferentValueShouldReturnFalse() {
 		
 		Term t1, t2;
-		Var x;
+		Placeholder x;
 		Cons abstractList, concreteList;
 		
 		t1 = mock( Term.class );
 		t2 = mock( Term.class );
-		x = new Var( "X" );
+		x = new Placeholder( "X" );
 		
 		abstractList = list( x, x );
 		concreteList = list( t1, t2 );
@@ -285,12 +285,12 @@ public class LibFunTest {
 	public void unspecializingVarAllowsNewUnification() {
 		
 		Term t1, t2;
-		Var x;
+		Placeholder x;
 		
 		t1 = mock( Term.class );
 		t2 = mock( Term.class );
 		
-		x = new Var( "X" );
+		x = new Placeholder( "X" );
 		
 		assertFalse( x.isSpecialized() );
 		assertTrue( unify( x, t1 ) );
@@ -309,9 +309,9 @@ public class LibFunTest {
 	@Test
 	public void unspecializeIsHandedDownToVar() {
 		
-		Var var;
+		Placeholder var;
 		
-		var = mock( Var.class );
+		var = mock( Placeholder.class );
 		
 		unspecialize( var );
 		verify( var ).unspecialize();

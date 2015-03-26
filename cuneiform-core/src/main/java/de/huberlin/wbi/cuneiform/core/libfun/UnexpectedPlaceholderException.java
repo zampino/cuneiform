@@ -1,10 +1,10 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-public class UnexpectedVarException extends RuntimeException {
+public class UnexpectedPlaceholderException extends RuntimeException {
 
 	private static final long serialVersionUID = -3319127875026655460L;
 
-	public UnexpectedVarException( String msg ) {
+	public UnexpectedPlaceholderException( String msg ) {
 		super( msg );
 	}
 }

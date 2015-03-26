@@ -25,7 +25,7 @@ public class VarTest {
 	@Test
 	@Parameters( method="getValidName" )
 	public void constructorShouldAcceptValidName( String name ) {
-		new Var( name );
+		new Placeholder( name );
 	}
 	
 
@@ -33,7 +33,7 @@ public class VarTest {
 	@Test( expected=IllegalArgumentException.class )
 	@Parameters( method="getIllegalName" )
 	public void constructorShouldThrowIaeOnIllegalName( String name ) {
-		new Var( name );
+		new Placeholder( name );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -41,9 +41,9 @@ public class VarTest {
 	@Parameters( method="getValidName" )
 	public void nameShouldBeRetrievable( String name ) {
 		
-		Var var;
+		Placeholder var;
 		
-		var = new Var( name );
+		var = new Placeholder( name );
 		
 		assertEquals( name, var.getName() );
 	}
@@ -53,11 +53,11 @@ public class VarTest {
 	public void unifyShouldMemorizeBoundValue() {
 		
 		Term t;
-		Var var;
+		Placeholder var;
 		
 		t = mock( Term.class );
 
-		var = new Var( "X" );
+		var = new Placeholder( "X" );
 		assertTrue( var.unify( t ) );
 		assertEquals( t, var.getSpecializedValue() );
 	}

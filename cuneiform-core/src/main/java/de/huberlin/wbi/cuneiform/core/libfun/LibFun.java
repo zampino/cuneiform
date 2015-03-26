@@ -40,8 +40,8 @@ public class LibFun {
 	
 	public static boolean unify( Term abstractTerm, Term concreteTerm ) {
 
-		if( concreteTerm instanceof Var )
-			throw new UnexpectedVarException( "Concrete term must not contain variable: "+concreteTerm );
+		if( concreteTerm instanceof Placeholder )
+			throw new UnexpectedPlaceholderException( "Concrete term must not contain placeholderS: "+concreteTerm );
 		
 		if( abstractTerm == null ) {
 

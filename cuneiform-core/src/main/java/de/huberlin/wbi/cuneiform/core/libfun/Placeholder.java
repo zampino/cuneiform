@@ -2,13 +2,13 @@ package de.huberlin.wbi.cuneiform.core.libfun;
 
 import static de.huberlin.wbi.cuneiform.core.libfun.LibFun.*;
 
-public class Var extends Term {
+public class Placeholder extends Term {
 	
 	private final String name;
 	private Term specializedValue;
 	private boolean isSpecial;
 	
-	public Var( String name ) {
+	public Placeholder( String name ) {
 		
 		if( name == null )
 			throw new IllegalArgumentException( "Variable name must not be null." );
