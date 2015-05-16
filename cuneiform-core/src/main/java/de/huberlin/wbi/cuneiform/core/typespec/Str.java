@@ -2,7 +2,7 @@ package de.huberlin.wbi.cuneiform.core.typespec;
 
 import de.huberlin.wbi.cuneiform.core.libfun.Record;
 
-import static de.huberlin.wbi.cuneiform.core.libfun.LibFun.*;
+import static de.huberlin.wbi.cuneiform.core.libfun.Constant.constantFrom;
 
 public class Str extends Record {
 
