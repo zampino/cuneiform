@@ -1,5 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
+import static de.huberlin.wbi.cuneiform.core.libfun.Constant.constantFrom;
 import static org.junit.Assert.*;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -31,7 +32,7 @@ public class ConstantTest {
 	 * Actual tests
 	 */
 
-	@SuppressWarnings({ "static-method", "unused" })
+	@SuppressWarnings("static-method")
 	@Test( expected=IllegalArgumentException.class )
 	public void constructorShouldThrowIaeOnNullArg() {
 		new Constant<String>( null );
@@ -76,6 +77,110 @@ public class ConstantTest {
 		assertTrue( c2.equals( c1 ) );
 	}
 	
+
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void printStringConstantShouldQuoteContent() {
+		
+		Term t;
+		String content;
+		
+		content = "bla";
+		
+		t = new Constant<>( content );
+		assertEquals( "\""+content+"\"", t.print() );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void printIntegerConstantShouldReturnStringValue() {
+		
+		Term t;
+		int content;
+		
+		content = 4;
+		t = new Constant<>( content );
+		assertEquals( String.valueOf( content ), t.print() );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void constantFromStringShouldRememberContent() {
+		
+		Constant<String> c;
+		String content;
+		
+		content = "bla";
+		
+		c = constantFrom( content );
+		assertEquals( content, c.getContent() );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=IllegalArgumentException.class )
+	public void constantFromStringShouldThrowIaeOnNullContent() {
+		constantFrom( null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void constantFromIntShouldRememberContent() {
+		
+		Constant<Integer> c;
+		Integer content;
+		
+		content = 4;
+		c = constantFrom( content );
+		
+		assertEquals( content, c.getContent() );
+		
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsShouldReturnTrueOnSelf() {
+		
+		String content;
+		Term t1;
+		
+		content = "bla";
+		
+		t1 = new Constant<>( content );
+		
+		assertTrue( t1.equals( t1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsShouldReturnTrueOnStringConstantsWithEqualContent() {
+		
+		String content;
+		Term t1, t2;
+		
+		content = "bla";
+		
+		t1 = new Constant<>( content );
+		t2 = new Constant<>( content );
+		
+		assertTrue( t1.equals( t2 ) );
+		assertTrue( t2.equals( t1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsShouldReturnFalseOnDifferingStringConstants() {
+		
+		Term t1, t2;
+		
+		
+		t1 = new Constant<>( "bla" );
+		t2 = new Constant<>( "blub" );
+		
+		assertFalse( t1.equals( t2 ) );
+		assertFalse( t2.equals( t1 ) );
+	}
+	
 	@SuppressWarnings("static-method")
 	@Test
 	@Parameters( method="getValidStringConstantContent" )
@@ -103,5 +208,14 @@ public class ConstantTest {
 		assertFalse( c1.unify( c2 ) );
 		assertFalse( c2.unify( c1 ) );
 	}
-
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unspecializeDoesNotAffectConstant() {
+		
+		Constant<String> c;
+		
+		c = new Constant<>( "bla" );
+		c.unspecialize();
+	}
 }

@@ -1,8 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-import de.huberlin.wbi.cuneiform.core.libfun.LibFun;
-
-public class Record extends Term {
+public class Record implements Term {
 
 	private final String symbol;
 	private final Term[] termVec;
@@ -48,14 +46,14 @@ public class Record extends Term {
 			return false;
 		
 		for( i = 0; i < termVec.length; i++ )
-			if( !LibFun.eq( termVec[ i ], other.termVec[ i ] ) )
+			if( !termVec[ i ].equals( other.termVec[ i ] ) )
 				return false;
 		
 		return true;
 	}
 
 	@Override
-	protected boolean unify( Term other ) {
+	public boolean unify( Term other ) {
 		
 		Record record;
 		int i;
@@ -72,14 +70,14 @@ public class Record extends Term {
 			return false;
 		
 		for( i = 0; i < termVec.length; i++ )
-			if( !LibFun.unify( termVec[ i ], record.termVec[ i ] ) )
+			if( !termVec[ i ].unify( record.termVec[ i ] ) )
 				return false;
 		
 		return true;
 	}
 
 	@Override
-	protected String print() {
+	public String print() {
 		
 		StringBuffer buf;
 		
@@ -88,7 +86,7 @@ public class Record extends Term {
 		buf.append( '{' ).append( symbol );
 		
 		for( Term t : termVec )
-			buf.append( ',' ).append( LibFun.printTerm( t ) );
+			buf.append( ',' ).append( t.print() );
 		
 		buf.append( '}' );
 		
@@ -101,9 +99,9 @@ public class Record extends Term {
 	}
 
 	@Override
-	protected void unspecialize() {
+	public void unspecialize() {
 		
 		for( Term t : termVec )
-			LibFun.unspecialize( t );
+			t.unspecialize();
 	}
 }

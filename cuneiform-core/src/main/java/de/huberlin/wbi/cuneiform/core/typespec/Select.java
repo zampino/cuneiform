@@ -1,6 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.typespec;
 
-import static de.huberlin.wbi.cuneiform.core.libfun.LibFun.constantFrom;
+import static de.huberlin.wbi.cuneiform.core.libfun.Constant.constantFrom;
 import de.huberlin.wbi.cuneiform.core.libfun.Record;
 
 public class Select extends Record {

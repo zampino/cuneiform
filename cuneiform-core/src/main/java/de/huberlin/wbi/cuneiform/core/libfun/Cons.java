@@ -1,13 +1,11 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-import de.huberlin.wbi.cuneiform.core.libfun.LibFun;
-
-public class Cons extends Term {
+public class Cons extends List {
 	
 	private final Term head;
-	private final Cons tail;
+	private final List tail;
 
-	public Cons( Term head, Cons tail ) {
+	public Cons( Term head, List tail ) {
 		this.head = head;
 		this.tail = tail;
 	}
@@ -16,12 +14,12 @@ public class Cons extends Term {
 		return head;
 	}
 	
-	public Cons getTail() {
+	public List getTail() {
 		return tail;
 	}
 	
 	@Override
-	protected boolean unify( Term other ) {
+	public boolean unify( Term other ) {
 
 		Cons cons;
 		
@@ -30,27 +28,27 @@ public class Cons extends Term {
 		
 		cons = ( Cons )other;
 		
-		if( !( LibFun.unify( head, cons.head ) ) )
+		if( !( head.unify( cons.head ) ) )
 			return false;
 		
-		return LibFun.unify( tail, cons.tail );
+		return tail.unify( cons.tail );
 	}
 
 	@Override
-	protected String print() {
+	public String print() {
 		
 		StringBuffer buf;
 		
 		buf = new StringBuffer();
 				
-		buf.append( '[' ).append( LibFun.printTerm( head ) );
+		buf.append( '[' ).append( head.print() );
 		
 		if( tail == null )
 			buf.append( ']' );
 		else
 			buf
 				.append( ',' )
-				.append( LibFun.printTerm( tail ).substring( 1 ) );
+				.append( tail.print().substring( 1 ) );
 		
 		return buf.toString();
 	}
@@ -90,9 +88,10 @@ public class Cons extends Term {
 	}
 
 	@Override
-	protected void unspecialize() {
-		LibFun.unspecialize( head );
-		LibFun.unspecialize( tail );
-		
+	public void unspecialize() {
+		head.unspecialize();
+		tail.unspecialize();	
 	}
+	
+
 }

@@ -1,6 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-public class Constant<T> extends Term {
+public class Constant<T> implements Term {
 
 	private final T content;
 	
@@ -18,12 +18,12 @@ public class Constant<T> extends Term {
 	}
 
 	@Override
-	protected boolean unify( Term other ) {
+	public boolean unify( Term other ) {
 		return equals( other );
 	}
 
 	@Override
-	protected String print() {
+	public String print() {
 		
 		if( content instanceof String )
 			return "\""+content+"\"";
@@ -48,8 +48,13 @@ public class Constant<T> extends Term {
 
 
 	@Override
-	protected void unspecialize() {
-		// TODO Auto-generated method stub
-		
+	public void unspecialize() {}
+	
+	public static Constant<String> constantFrom( String value ) {
+		return new Constant<>( value );
+	}
+	
+	public static Constant<Integer> constantFrom( int value ) {
+		return new Constant<>( value );
 	}
 }

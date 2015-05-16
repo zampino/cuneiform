@@ -1,5 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
+import static de.huberlin.wbi.cuneiform.core.libfun.Constant.constantFrom;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import junitparams.JUnitParamsRunner;
@@ -31,7 +32,7 @@ public class RecordTest {
 
 
 	
-	@SuppressWarnings({ "static-method", "unused" })
+	@SuppressWarnings("static-method")
 	@Test( expected=IllegalArgumentException.class )
 	@Parameters( method="getIllegalSymbol" )
 	public void constructorShouldThrowIaeOnIllegalSymbol( String symbol ) {
@@ -198,4 +199,32 @@ public class RecordTest {
 		verify( c2 ).unify( c1 );
 	}
 
+	@SuppressWarnings("static-method")
+	@Test
+	public void printRecordShouldReturnProperRecord() {
+		
+		Term record, member;
+		String symbol;
+		
+		symbol = "bla";
+		member = constantFrom( "blub" );
+		record = new Record( symbol, member );
+		
+		assertEquals( "{bla,\"blub\"}", record.print() );
+		
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unspecializeIsHandedDownThroughRecord() {
+		
+		Term t;
+		Record r;
+		
+		t = mock( Term.class );
+		r = new Record( "bla", t );
+		
+		r.unspecialize();
+		verify( t ).unspecialize();
+	}
 }

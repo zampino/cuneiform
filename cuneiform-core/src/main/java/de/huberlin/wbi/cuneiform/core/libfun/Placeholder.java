@@ -1,8 +1,7 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-import static de.huberlin.wbi.cuneiform.core.libfun.LibFun.*;
 
-public class Placeholder extends Term {
+public class Placeholder implements Term {
 	
 	private final String name;
 	private Term specializedValue;
@@ -28,10 +27,10 @@ public class Placeholder extends Term {
 	}
 
 	@Override
-	protected boolean unify( Term other ) {
+	public boolean unify( Term other ) {
 		
 		if( isSpecial )
-			if( !eq( specializedValue, other ) )
+			if( !specializedValue.equals( other ) )
 				return false;
 		
 		specializedValue = other;
@@ -41,7 +40,7 @@ public class Placeholder extends Term {
 	}
 
 	@Override
-	protected String print() {
+	public String print() {
 		return name;
 	}
 
@@ -54,7 +53,7 @@ public class Placeholder extends Term {
 	}
 
 	@Override
-	protected void unspecialize() {
+	public void unspecialize() {
 		isSpecial = false;
 	}
 }
