@@ -754,8 +754,6 @@ public abstract class Invocation {
 			case ForeignLambdaExpr.LANGID_JAVA : return new ScalaInvocation( ticket, libPath );
 			case ForeignLambdaExpr.LANGID_PYTHON : return new PythonInvocation( ticket, libPath );
 			case ForeignLambdaExpr.LANGID_LISP : return new LispInvocation( ticket, libPath );
-			case ForeignLambdaExpr.LANGID_ERLANG : return new ErlangInvocation( ticket, libPath );
-			case ForeignLambdaExpr.LANGID_HASKELL : return new HaskellInvocation( ticket, libPath );
 			case ForeignLambdaExpr.LANGID_PEGASUS : return new PegasusInvocation( ticket, libPath );
 			default : throw new RuntimeException( "Language label '"+label+"' not recognized." );
 		}

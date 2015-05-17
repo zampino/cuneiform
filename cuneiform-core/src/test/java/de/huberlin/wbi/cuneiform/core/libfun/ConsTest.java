@@ -8,6 +8,58 @@ import static org.mockito.Mockito.*;
 import org.junit.Test;
 
 public class ConsTest {
+	
+	@SuppressWarnings({ "static-method", "unused" })
+	@Test( expected=IllegalArgumentException.class )
+	public void constructorShouldThrowIaeOnNullHead() {
+		
+		List l;
+		
+		l = mock( List.class );
+		new Cons( null, l );
+	}
+	
+	@SuppressWarnings({ "static-method", "unused" })
+	@Test( expected=IllegalArgumentException.class )
+	public void constructorShouldTrhowIaeOnNullTail() {
+		
+		Term t;
+		
+		t = mock( Term.class );
+		new Cons( t, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=IllegalArgumentException.class )
+	public void unifyShouldThrowIaeOnNullTerm() {
+		
+		Term t;
+		List l;
+		Cons c;
+		
+		t = mock( Term.class );
+		l = mock( List.class );
+		
+		c = new Cons( t, l );
+		c.unify( null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsShouldReturnFalseOnNull() {
+		
+		Term t;
+		List l;
+		Cons c;
+		
+		t = mock( Term.class );
+		l = mock( List.class );
+		
+		c = new Cons( t, l );
+		
+		assertNotEquals( null, c );
+		assertNotEquals( c, null );
+	}
 
 	@SuppressWarnings("static-method")
 	@Test
@@ -17,9 +69,10 @@ public class ConsTest {
 		Term t;
 		
 		t = mock( Term.class );
-		c = new Cons( t, null );
+		c = new Cons( t, NIL );
 		
 		assertEquals( t, c.getHead() );
+		assertEquals( c.getHead(), t );
 	}
 
 	@SuppressWarnings("static-method")
@@ -34,6 +87,7 @@ public class ConsTest {
 		c = new Cons( h, t );
 		
 		assertEquals( t, c.getTail() );
+		assertEquals( c.getTail(), t );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -76,13 +130,13 @@ public class ConsTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void equalsShouldReturnFalseOnNullNonNullHead() {
+	public void equalsShouldReturnFalseOnNilNonNilHead() {
 		
 		Term h1, h2;
 		Cons t;
 		Cons c1, c2;
 		
-		h1 = null;
+		h1 = NIL;
 		h2 = mock( Term.class );
 		t = mock( Cons.class );
 		
@@ -95,14 +149,14 @@ public class ConsTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void equalsShouldReturnFalseOnNullNonNullTail() {
+	public void equalsShouldReturnFalseOnNilNonNilTail() {
 		
 		Term h;
-		Cons t1, t2;
+		List t1, t2;
 		Cons c1, c2;
 		
 		h = mock( Term.class );
-		t1 = null;
+		t1 = NIL;
 		t2 = mock( Cons.class );
 		
 		c1 = new Cons( h, t1 );
@@ -114,12 +168,12 @@ public class ConsTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void equalsShouldReturnTrueOnEverythingNull() {
+	public void equalsShouldReturnTrueOnEverythingNil() {
 		
 		Cons c1, c2;
 		
-		c1 = new Cons( null, null );
-		c2 = new Cons( null, null );
+		c1 = new Cons( NIL, NIL );
+		c2 = new Cons( NIL, NIL );
 		
 		assertEquals( c1, c2 );
 		assertEquals( c2, c1 );
@@ -145,20 +199,6 @@ public class ConsTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void compareToNullShouldReturnFalse() {
-		
-		Cons c;
-		
-		c = new Cons( mock( Term.class ), mock( Cons.class ) );
-		
-		assertNotEquals( c, null );
-		assertNotEquals( null, c );
-	}
-	
-
-	
-	@SuppressWarnings("static-method")
-	@Test
 	public void listShouldConstructList() {
 		
 		Term term;
@@ -168,7 +208,7 @@ public class ConsTest {
 		l = list( term );
 		
 		assertEquals( term, l.getHead() );
-		assertNull( l.getTail() );
+		assertEquals( NIL, l.getTail() );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -181,7 +221,7 @@ public class ConsTest {
 		term1 = new Constant<>( "bla" );
 		term2 = new Constant<>( "blub" );
 		
-		l = new Cons( term1, new Cons( term2, null ) );
+		l = new Cons( term1, list( term2 ) );
 		assertEquals( "[\"bla\",\"blub\"]", l.print() );
 	}
 	

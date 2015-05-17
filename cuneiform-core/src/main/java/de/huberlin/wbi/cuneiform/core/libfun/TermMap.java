@@ -30,11 +30,16 @@ public class TermMap {
 		return new TermMap( newContent );
 	}
 	
-	public Term get( Term key ) {
+	public Term get( Term key ) throws UnboundVarException {
 		
 		Term value;
 		
+		if( key == null )
+			throw new IllegalArgumentException( "Key must not be null." );
+		
 		value = content.get( key );
+		if( value == null )
+			throw new UnboundVarException( key );
 		
 		return value;
 	}
@@ -53,8 +58,8 @@ public class TermMap {
 		HashMap<Term,Term> newContent;
 		
 		newContent = new HashMap<>();
-		newContent.putAll( content );
 		newContent.putAll( tm2.content );
+		newContent.putAll( content );
 		
 		return new TermMap( newContent );		
 	}

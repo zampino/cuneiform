@@ -43,11 +43,13 @@ public class NilTest {
 		NIL.unspecialize();
 	}
 	
+	@SuppressWarnings("static-method")
 	@Test( expected=InvalidOpOnNilException.class )
 	public void getHeadOnNilShouldThrowIoone() {
 		NIL.getHead();
 	}
 	
+	@SuppressWarnings("static-method")
 	@Test( expected=InvalidOpOnNilException.class )
 	public void getTailOnNilShouldThrowIoone() {
 		NIL.getTail();
