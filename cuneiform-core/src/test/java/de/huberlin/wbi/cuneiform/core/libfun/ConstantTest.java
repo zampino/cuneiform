@@ -32,7 +32,7 @@ public class ConstantTest {
 	 * Actual tests
 	 */
 
-	@SuppressWarnings("static-method")
+	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
 	public void constructorShouldThrowIaeOnNullArg() {
 		new Constant<String>( null );

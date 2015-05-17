@@ -4,7 +4,7 @@ public class UnexpectedPlaceholderException extends RuntimeException {
 
 	private static final long serialVersionUID = -3319127875026655460L;
 
-	public UnexpectedPlaceholderException( String msg ) {
-		super( msg );
+	public UnexpectedPlaceholderException( Placeholder ph ) {
+		super( "Placeholder "+ph+" not expected." );
 	}
 }

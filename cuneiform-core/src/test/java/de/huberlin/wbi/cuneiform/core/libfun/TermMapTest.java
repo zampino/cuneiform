@@ -118,8 +118,9 @@ public class TermMapTest {
 		assertEquals( def, m.get( mock( Term.class ), def ) );
 	}
 	
+	@SuppressWarnings("static-method")
 	@Test( expected=IllegalArgumentException.class )
-	public void getNullShouldThrowIae() {
+	public void getNullShouldThrowIae() throws UnboundVarException {
 		
 		TermMap m;
 		

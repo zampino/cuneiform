@@ -19,6 +19,10 @@ public class Constant<T> implements Term {
 
 	@Override
 	public boolean unify( Term other ) {
+		
+		if( other instanceof Placeholder )
+			throw new UnexpectedPlaceholderException( ( Placeholder )other );
+		
 		return equals( other );
 	}
 

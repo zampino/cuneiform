@@ -32,7 +32,7 @@ public class RecordTest {
 
 
 	
-	@SuppressWarnings("static-method")
+	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
 	@Parameters( method="getIllegalSymbol" )
 	public void constructorShouldThrowIaeOnIllegalSymbol( String symbol ) {

@@ -21,13 +21,11 @@ public class Nil extends List {
 
 	@Override
 	public Term getHead() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InvalidOpOnNilException( "Cannot retrieve head from nil." );
 	}
 
 	@Override
 	public List getTail() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new InvalidOpOnNilException( "Cannot retrieve tail from nil." );
 	}
 }

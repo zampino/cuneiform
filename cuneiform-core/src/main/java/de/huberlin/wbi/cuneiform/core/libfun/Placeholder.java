@@ -20,6 +20,7 @@ public class Placeholder implements Term {
 
 		this.name = name;
 		isSpecial = false;
+		specializedValue = null;
 	}
 
 	public String getName() {

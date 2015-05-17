@@ -33,7 +33,7 @@ public class VarTest {
 		return new Object[][] {{null}, {""}, {"bla"}, {"0"}, {"@"}, {"["}};
 	}
 	
-	@SuppressWarnings("static-method")
+	@SuppressWarnings({ "static-method", "unused" })
 	@Test
 	@Parameters( method="getValidName" )
 	public void constructorShouldAcceptValidName( String name ) {
@@ -41,7 +41,7 @@ public class VarTest {
 	}
 	
 
-	@SuppressWarnings("static-method")
+	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
 	@Parameters( method="getIllegalName" )
 	public void constructorShouldThrowIaeOnIllegalName( String name ) {

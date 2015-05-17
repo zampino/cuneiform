@@ -1,19 +1,30 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
+import static de.huberlin.wbi.cuneiform.core.libfun.Nil.NIL;
+
 public class Cons extends List {
 	
 	private final Term head;
 	private final List tail;
 
 	public Cons( Term head, List tail ) {
+		
+		if( head == null )
+			throw new IllegalArgumentException( "Cons head must not be null." );
+		
+		if( tail == null )
+			throw new IllegalArgumentException( "Cons tail must not be null." );
+		
 		this.head = head;
 		this.tail = tail;
 	}
 
+	@Override
 	public Term getHead() {
 		return head;
 	}
 	
+	@Override
 	public List getTail() {
 		return tail;
 	}
@@ -22,6 +33,9 @@ public class Cons extends List {
 	public boolean unify( Term other ) {
 
 		Cons cons;
+		
+		if( other == null )
+			throw new IllegalArgumentException( "Term to unify with must not be null." );
 		
 		if( !( other instanceof Cons ) )
 			return false;
@@ -43,7 +57,7 @@ public class Cons extends List {
 				
 		buf.append( '[' ).append( head.print() );
 		
-		if( tail == null )
+		if( tail.equals( NIL ) )
 			buf.append( ']' );
 		else
 			buf
