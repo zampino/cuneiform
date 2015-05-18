@@ -58,6 +58,9 @@ public class Record implements Term {
 		Record record;
 		int i;
 		
+		if( other instanceof Placeholder )
+			throw new UnexpectedPlaceholderException( ( Placeholder )other );
+		
 		if( !( other instanceof Record ) )
 			return false;
 		
