@@ -379,6 +379,22 @@ public class TermMapTest {
 		
 		assertTrue( tm1.unify( tm2 ) );
 		verify( value ).unify( value );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unspecializeIsDeferredToValues() {
 		
+		Term value;
+		Constant<String> key;
+		TermMap tm;
+		
+		key = new Constant<>( "blub" );
+		value = mock( Term.class );
+		
+		tm = new TermMap( key, value );
+		tm.unspecialize();
+		
+		verify( value ).unspecialize();
 	}
 }
