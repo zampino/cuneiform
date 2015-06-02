@@ -83,8 +83,8 @@ public class ConsTest {
 		t = mock( Term.class );
 		c = new Cons( t, NIL );
 		
-		assertEquals( t, c.getHead() );
-		assertEquals( c.getHead(), t );
+		assertEquals( t, c.hd() );
+		assertEquals( c.hd(), t );
 	}
 
 	@SuppressWarnings("static-method")
@@ -98,8 +98,8 @@ public class ConsTest {
 		t = mock( Cons.class );
 		c = new Cons( h, t );
 		
-		assertEquals( t, c.getTail() );
-		assertEquals( c.getTail(), t );
+		assertEquals( t, c.tl() );
+		assertEquals( c.tl(), t );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -230,8 +230,8 @@ public class ConsTest {
 		term = mock( Term.class );
 		l = list( term );
 		
-		assertEquals( term, l.getHead() );
-		assertEquals( NIL, l.getTail() );
+		assertEquals( term, l.hd() );
+		assertEquals( NIL, l.tl() );
 	}
 	
 	@SuppressWarnings("static-method")

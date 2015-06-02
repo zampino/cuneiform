@@ -29,12 +29,12 @@ public class Nil extends List {
 	}
 
 	@Override
-	public Term getHead() {
+	public Term hd() {
 		throw new InvalidOpOnNilException( "Cannot retrieve head from nil." );
 	}
 
 	@Override
-	public List getTail() {
+	public List tl() {
 		throw new InvalidOpOnNilException( "Cannot retrieve tail from nil." );
 	}
 }

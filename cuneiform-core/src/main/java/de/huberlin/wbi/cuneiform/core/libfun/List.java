@@ -4,8 +4,8 @@ import static de.huberlin.wbi.cuneiform.core.libfun.Nil.NIL;
 
 public abstract class List implements Term {
 
-	public abstract Term getHead();
-	public abstract List getTail();
+	public abstract Term hd();
+	public abstract List tl();
 	
 	public static List list( Term... termVec ) {
 		
