@@ -30,7 +30,7 @@ public class TermMap implements Term {
 		return new TermMap( newContent );
 	}
 	
-	public Term get( Term key ) throws UnboundVarException {
+	public Term get( Term key ) throws UnboundKeyException {
 		
 		Term value;
 		
@@ -39,7 +39,7 @@ public class TermMap implements Term {
 		
 		value = content.get( key );
 		if( value == null )
-			throw new UnboundVarException( key );
+			throw new UnboundKeyException( key );
 		
 		return value;
 	}

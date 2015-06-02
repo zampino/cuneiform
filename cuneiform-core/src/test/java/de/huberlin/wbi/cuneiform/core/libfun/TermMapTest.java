@@ -20,7 +20,7 @@ public class TermMapTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void constructorReturnsMapWithSingleEntry() throws UnboundVarException {
+	public void constructorReturnsMapWithSingleEntry() throws UnboundKeyException {
 		
 		TermMap m;
 		Term key;
@@ -36,7 +36,7 @@ public class TermMapTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void putReturnsNewMapWithNewEntry() throws UnboundVarException {
+	public void putReturnsNewMapWithNewEntry() throws UnboundKeyException {
 		
 		TermMap m1, m2;
 		Term key;
@@ -57,7 +57,7 @@ public class TermMapTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void mergeCombinesTwoMaps() throws UnboundVarException {
+	public void mergeCombinesTwoMaps() throws UnboundKeyException {
 		
 		TermMap m1, m2, m3;
 		Term key1, key2, value1, value2;
@@ -78,7 +78,7 @@ public class TermMapTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void mergeFirstShouldSupersedeSecond() throws UnboundVarException {
+	public void mergeFirstShouldSupersedeSecond() throws UnboundKeyException {
 		
 		TermMap m1, m2, m3;
 		Term key, value1, value2;
@@ -96,8 +96,8 @@ public class TermMapTest {
 	}
 	
 	@SuppressWarnings("static-method")
-	@Test( expected=UnboundVarException.class )
-	public void getUnboundVarShouldThrowUve() throws UnboundVarException {
+	@Test( expected=UnboundKeyException.class )
+	public void getUnboundVarShouldThrowUve() throws UnboundKeyException {
 		
 		TermMap m;
 		
@@ -120,7 +120,7 @@ public class TermMapTest {
 	
 	@SuppressWarnings("static-method")
 	@Test( expected=IllegalArgumentException.class )
-	public void getNullShouldThrowIae() throws UnboundVarException {
+	public void getNullShouldThrowIae() throws UnboundKeyException {
 		
 		TermMap m;
 		
