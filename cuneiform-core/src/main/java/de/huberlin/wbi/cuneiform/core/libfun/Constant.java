@@ -66,4 +66,8 @@ public class Constant<T> implements Term {
 	public static Constant<Integer> constantFrom( int value ) {
 		return new Constant<>( value );
 	}
+	
+	public static Constant<Boolean> constantFrom( boolean value ) {
+		return new Constant<>( value );
+	}
 }

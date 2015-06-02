@@ -35,7 +35,7 @@ public class Placeholder implements Term {
 		return toString();
 	}
 
-	public Object getSpecializedValue() {
+	public Term getSpecializedValue() {
 		return specializedValue;
 	}
 

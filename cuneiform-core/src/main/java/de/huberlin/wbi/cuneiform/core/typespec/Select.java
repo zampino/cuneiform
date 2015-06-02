@@ -1,14 +1,16 @@
 package de.huberlin.wbi.cuneiform.core.typespec;
 
-import static de.huberlin.wbi.cuneiform.core.libfun.Constant.constantFrom;
+import static de.huberlin.wbi.cuneiform.core.libfun.Constant.*;
+import static de.huberlin.wbi.cuneiform.core.libfun.Atom.*;
+
 import de.huberlin.wbi.cuneiform.core.libfun.Record;
 
 public class Select extends Record {
 	
-	private static final String SYMBOL_SELECT = "select";
+	public static final String SYMBOL = "select";
 	
 	public Select( int channel, Ticket ticket ) {
-		super( SYMBOL_SELECT, constantFrom( channel ), ticket );
+		super( atomFrom( SYMBOL ), constantFrom( channel ), ticket );
 	}
 
 }

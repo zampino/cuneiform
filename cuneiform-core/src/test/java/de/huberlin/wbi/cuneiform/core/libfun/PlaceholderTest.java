@@ -1,6 +1,7 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
 import static de.huberlin.wbi.cuneiform.core.libfun.Constant.constantFrom;
+import static de.huberlin.wbi.cuneiform.core.libfun.Atom.atomFrom;
 import static de.huberlin.wbi.cuneiform.core.libfun.List.list;
 import static de.huberlin.wbi.cuneiform.core.libfun.Nil.NIL;
 import static org.junit.Assert.*;
@@ -18,7 +19,7 @@ public class PlaceholderTest {
 	public Object[] getConcreteTerm() {
 		return new Object[][] {
 			{constantFrom( "bla" )},
-			{new Record( "a", constantFrom( "b" ), constantFrom( 4 ) )},
+			{new Record( atomFrom( "a" ), constantFrom( "b" ), constantFrom( 4 ) )},
 			{NIL},
 			{list( constantFrom( 1 ), constantFrom( 2 ), constantFrom( 3 ) )}};
 	}
@@ -140,5 +141,28 @@ public class PlaceholderTest {
 		ph1 = new Placeholder();
 		ph2 = new Placeholder();
 		ph1.unify( ph2 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void PhShouldNotEqualOtherPh() {
+		
+		Placeholder ph1, ph2;
+		
+		ph1 = new Placeholder();
+		ph2 = new Placeholder();
+		
+		assertNotEquals( ph1, ph2 );
+		assertNotEquals( ph2, ph1 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void PhShouldEqualSelf() {
+		
+		Placeholder ph;
+		
+		ph = new Placeholder();
+		assertEquals( ph, ph );
 	}
 }
