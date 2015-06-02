@@ -1,6 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-public class UnboundKeyException extends Exception {
+public class UnboundKeyException extends RuntimeException {
 
 	private static final long serialVersionUID = -6307928111959625078L;
 

@@ -62,7 +62,7 @@ public class NilTest {
 	}
 	
 	@SuppressWarnings("static-method")
-	@Test( expected=UnexpectedPlaceholderException.class )
+	@Test( expected=PhOnRightHandSideException.class )
 	public void unifyNilWithPhShouldThrowUpe() {
 		
 		Placeholder ph;

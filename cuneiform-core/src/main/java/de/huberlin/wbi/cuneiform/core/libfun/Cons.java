@@ -38,7 +38,7 @@ public class Cons extends List {
 			throw new IllegalArgumentException( "Ohter term must not be null." );
 		
 		if( other instanceof Placeholder )
-			throw new UnexpectedPlaceholderException( ( Placeholder )other );
+			throw new PhOnRightHandSideException();
 		
 		if( !( other instanceof Cons ) )
 			return false;

@@ -306,7 +306,7 @@ public class ConstantTest {
 	}
 	
 	@SuppressWarnings("static-method")
-	@Test( expected=UnexpectedPlaceholderException.class )
+	@Test( expected=PhOnRightHandSideException.class )
 	public void unifyConstantWithPhShouldThrowUpe() {
 		
 		Constant<String> c;

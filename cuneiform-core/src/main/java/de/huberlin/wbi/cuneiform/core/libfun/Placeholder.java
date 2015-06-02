@@ -18,7 +18,7 @@ public class Placeholder implements Term {
 			throw new IllegalArgumentException( "Other term must not be null." );
 		
 		if( other instanceof Placeholder )
-			throw new UnexpectedPlaceholderException( ( Placeholder )other );
+			throw new PhOnRightHandSideException();
 		
 		if( isSpecial )
 			if( !specializedValue.equals( other ) )
