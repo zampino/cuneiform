@@ -13,7 +13,7 @@ public class Nil extends List {
 			throw new IllegalArgumentException( "Other term must not be null." );
 		
 		if( other instanceof Placeholder )
-			throw new UnexpectedPlaceholderException( ( Placeholder )other );
+			throw new PhOnRightHandSideException();
 		
 		return this == other;
 	}

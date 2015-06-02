@@ -12,26 +12,6 @@ import org.junit.runner.RunWith;
 @RunWith( JUnitParamsRunner.class )
 public class RecordTest {
 	
-	/*
-	 * Parameter initialization
-	 */
-	
-	@SuppressWarnings("static-method")
-	public Object[] getValidSymbol() {
-		return new Object[][] {{"bla"}, {"blub"}, {"x"}, {"a"}, {"z"}, {"aA"} };
-	}
-	
-	@SuppressWarnings("static-method")
-	public Object[] getIllegalSymbol() {
-		return new Object[][] {{null}, {""}, {"X"}, {"`"}, {"{"}, {"0"}};
-	}
-	
-	/*
-	 * Actual tests
-	 */
-
-
-	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
 	@Parameters( method="getIllegalSymbol" )
@@ -41,22 +21,28 @@ public class RecordTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	@Parameters( method="getValidSymbol" )
-	public void symbolShouldBeRetrievable( String symbol ) {
+	public void emptyRecordWithEqualSymbolShouldBeEqual() {
 		
-		Record r;
+		Record r1, r2;
+		String s;
 		
-		r = new Record( symbol );
-		assertEquals( symbol, r.getSymbol() );
+		s = "bla";
+		
+		r1 = new Record( s );
+		r2 = new Record( s );
+		
+		assertEquals( r1, r2 );
+		assertEquals( r2, r1 );
 	}
 	
 	@SuppressWarnings("static-method")
-	@Test
-	public void recordEqualsNullShouldReturnFalse() {
-		
-		Record r;
-		r = new Record( "bla", mock( Term.class ) );
-		assertNotEquals( r, null );
+	public Object[] getIllegalSymbol() {
+		return new Object[][] {{null}, {""}, {"X"}, {"`"}, {"{"}, {"0"}};
+	}
+	
+	@SuppressWarnings("static-method")
+	public Object[] getValidSymbol() {
+		return new Object[][] {{"bla"}, {"blub"}, {"x"}, {"a"}, {"z"}, {"aA"} };
 	}
 	
 	@SuppressWarnings("static-method")
@@ -77,18 +63,26 @@ public class RecordTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void emptyRecordWithEqualSymbolShouldBeEqual() {
+	public void printRecordShouldReturnProperRecord() {
 		
-		Record r1, r2;
-		String s;
+		Term record, member;
+		String symbol;
 		
-		s = "bla";
+		symbol = "bla";
+		member = constantFrom( "blub" );
+		record = new Record( symbol, member );
 		
-		r1 = new Record( s );
-		r2 = new Record( s );
+		assertEquals( "{bla,\"blub\"}", record.print() );
 		
-		assertEquals( r1, r2 );
-		assertEquals( r2, r1 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void recordEqualsNullShouldReturnFalse() {
+		
+		Record r;
+		r = new Record( "bla", mock( Term.class ) );
+		assertNotEquals( r, null );
 	}
 
 	@SuppressWarnings("static-method")
@@ -146,41 +140,13 @@ public class RecordTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void unifyRecordWithNonRecordShouldReturnFalse() {
+	@Parameters( method="getValidSymbol" )
+	public void symbolShouldBeRetrievable( String symbol ) {
 		
 		Record r;
-		Cons c;
 		
-		r = new Record( "bla" );
-		c = mock( Cons.class );
-		assertFalse( r.unify( c ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test( expected=IllegalArgumentException.class )
-	public void unifyRecordWithNullShouldThrowIae() {
-		
-		Record r;
-		String s;
-		Term t;
-		
-		s = "blub";
-		t = mock( Term.class );
-		
-		r = new Record( s, t );
-		r.unify( null );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test( expected=UnexpectedPlaceholderException.class )
-	public void unifyRecordWithPhShouldThrowUpe() {
-		
-		Record r;
-		Placeholder ph;
-		
-		r = new Record( "bla", mock( Term.class ) );
-		ph = new Placeholder();
-		r.unify( ph );
+		r = new Record( symbol );
+		assertEquals( symbol, r.getSymbol() );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -195,16 +161,6 @@ public class RecordTest {
 		
 		assertTrue( r1.unify( r2 ) );
 		assertTrue( r2.unify( r1 ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void unifyRecordWithSelfShouldReturnTrue() {
-		
-		Record r;
-		
-		r = new Record( "bla", new Constant<>( "blub" ) );
-		assertTrue( r.unify( r ) );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -232,24 +188,6 @@ public class RecordTest {
 		assertTrue( r1.unify( r2 ) );
 	}
 	
-	
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void unifyRecordWithDifferingLengthShouldReturnFalse() {
-		
-		Record r1, r2;
-		String symbol;
-		
-		symbol = "bla";
-		
-		r1 = new Record( symbol );
-		r2 = new Record( symbol, mock( Cons.class ) );
-		
-		assertFalse( r1.unify( r2 ) );
-		assertFalse( r2.unify( r1 ) );
-	}
-	
 	@SuppressWarnings("static-method")
 	@Test
 	public void unifyRecordWithDifferingFieldsShouldReturnFalse() {
@@ -271,20 +209,72 @@ public class RecordTest {
 		verify( c1 ).unify( c2 );
 		verify( c2 ).unify( c1 );
 	}
-
+	
 	@SuppressWarnings("static-method")
 	@Test
-	public void printRecordShouldReturnProperRecord() {
+	public void unifyRecordWithDifferingLengthShouldReturnFalse() {
 		
-		Term record, member;
+		Record r1, r2;
 		String symbol;
 		
 		symbol = "bla";
-		member = constantFrom( "blub" );
-		record = new Record( symbol, member );
 		
-		assertEquals( "{bla,\"blub\"}", record.print() );
+		r1 = new Record( symbol );
+		r2 = new Record( symbol, mock( Cons.class ) );
 		
+		assertFalse( r1.unify( r2 ) );
+		assertFalse( r2.unify( r1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifyRecordWithNonRecordShouldReturnFalse() {
+		
+		Record r;
+		Cons c;
+		
+		r = new Record( "bla" );
+		c = mock( Cons.class );
+		assertFalse( r.unify( c ) );
+	}
+	
+	
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=IllegalArgumentException.class )
+	public void unifyRecordWithNullShouldThrowIae() {
+		
+		Record r;
+		String s;
+		Term t;
+		
+		s = "blub";
+		t = mock( Term.class );
+		
+		r = new Record( s, t );
+		r.unify( null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=PhOnRightHandSideException.class )
+	public void unifyRecordWithPhShouldThrowUpe() {
+		
+		Record r;
+		Placeholder ph;
+		
+		r = new Record( "bla", mock( Term.class ) );
+		ph = new Placeholder();
+		r.unify( ph );
+	}
+
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifyRecordWithSelfShouldReturnTrue() {
+		
+		Record r;
+		
+		r = new Record( "bla", new Constant<>( "blub" ) );
+		assertTrue( r.unify( r ) );
 	}
 	
 	@SuppressWarnings("static-method")

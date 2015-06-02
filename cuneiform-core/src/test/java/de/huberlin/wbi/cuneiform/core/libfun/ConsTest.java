@@ -45,7 +45,7 @@ public class ConsTest {
 	}
 	
 	@SuppressWarnings("static-method")
-	@Test( expected=UnexpectedPlaceholderException.class )
+	@Test( expected=PhOnRightHandSideException.class )
 	public void unifyConsWithPhShouldThrowUpe() {
 		
 		Cons c;

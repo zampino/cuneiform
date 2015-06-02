@@ -8,6 +8,16 @@ public class TermMap implements Term {
 	
 	public TermMap( Term key, Term value ) {
 		this();
+		
+		if( key == null )
+			throw new IllegalArgumentException( "Key term must not be null." );
+		
+		if( key instanceof Placeholder )
+			throw new PhIsKeyInTermMapException();
+		
+		if( value == null )
+			throw new IllegalArgumentException( "Value term must not be null." );
+		
 		content.put( key, value );
 	}
 	
@@ -23,6 +33,15 @@ public class TermMap implements Term {
 		
 		HashMap<Term,Term> newContent;
 		
+		if( key == null )
+			throw new IllegalArgumentException( "Key term must not be null." );
+		
+		if( key instanceof Placeholder )
+			throw new PhIsKeyInTermMapException();
+		
+		if( value == null )
+			throw new IllegalArgumentException( "Value term must not be null." );
+		
 		newContent = new HashMap<>();
 		newContent.putAll( content );
 		newContent.put( key, value );
@@ -30,7 +49,7 @@ public class TermMap implements Term {
 		return new TermMap( newContent );
 	}
 	
-	public Term get( Term key ) throws UnboundKeyException {
+	public Term get( Term key ) {
 		
 		Term value;
 		
@@ -79,7 +98,7 @@ public class TermMap implements Term {
 			throw new IllegalArgumentException( "Other term must not be null." );
 		
 		if( other instanceof Placeholder )
-			throw new UnexpectedPlaceholderException( ( Placeholder )other );
+			throw new PhOnRightHandSideException();
 		
 		// TODO Auto-generated method stub
 		return false;

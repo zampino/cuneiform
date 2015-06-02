@@ -62,7 +62,7 @@ public class Record implements Term {
 			throw new IllegalArgumentException( "Other term must not be null." );
 		
 		if( other instanceof Placeholder )
-			throw new UnexpectedPlaceholderException( ( Placeholder )other );
+			throw new PhOnRightHandSideException();
 		
 		if( !( other instanceof Record ) )
 			return false;
