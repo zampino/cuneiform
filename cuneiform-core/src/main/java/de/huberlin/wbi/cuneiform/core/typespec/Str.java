@@ -1,15 +1,16 @@
 package de.huberlin.wbi.cuneiform.core.typespec;
 
-import de.huberlin.wbi.cuneiform.core.libfun.Record;
+import static de.huberlin.wbi.cuneiform.core.libfun.Constant.*;
+import static de.huberlin.wbi.cuneiform.core.libfun.Atom.*;
 
-import static de.huberlin.wbi.cuneiform.core.libfun.Constant.constantFrom;
+import de.huberlin.wbi.cuneiform.core.libfun.Record;
 
 public class Str extends Record {
 
-	private static final String SYMBOL_STR = "str";
+	public static final String SYMBOL = "str";
 	
 	public Str( String value ) {
-		super( SYMBOL_STR, constantFrom( value ) );
+		super( atomFrom( SYMBOL ), constantFrom( value ) );
 	}
 
 }

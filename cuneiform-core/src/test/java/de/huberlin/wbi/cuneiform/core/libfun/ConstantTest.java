@@ -1,6 +1,7 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-import static de.huberlin.wbi.cuneiform.core.libfun.Constant.constantFrom;
+import static de.huberlin.wbi.cuneiform.core.libfun.Constant.*;
+import static de.huberlin.wbi.cuneiform.core.libfun.Nil.NIL;
 import static org.junit.Assert.*;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -131,6 +132,12 @@ public class ConstantTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
+	public void equalsNullShouldReturnFalse() {
+		assertNotEquals( constantFrom( "blub" ), null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
 	@Parameters( method="getValidIntegerConstantContent" )
 	public void equalsConstantWithEqualIntValueShouldReturnTrue( Integer validInt ) {
 		
@@ -184,26 +191,7 @@ public class ConstantTest {
 		c = new Constant<>( "blub" );
 		assertNotEquals( c, 5 );
 	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void equalsNullClassShouldReturnFalse() {
-		
-		Constant<String> c;
-		
-		c = new Constant<>( "blub" );
-		assertNotEquals( c, null );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void equalsNullShouldReturnFalse() {
-		
-		Constant<String> c;
-		
-		c = new Constant<>( "blub" );
-		assertNotEquals( c, null );
-	}
+
 	
 	@SuppressWarnings("static-method")
 	@Test
@@ -280,6 +268,18 @@ public class ConstantTest {
 		c = new Constant<>( content );
 		
 		assertTrue( c.unify( c ) );		
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifyConstantWithNonConstantShouldReturnFalse() {
+		
+		Constant<String> c;
+		
+		c = constantFrom( "blub" );
+		
+		assertNotEquals( c, NIL );
+		assertNotEquals( NIL, c );
 	}
 	
 	@SuppressWarnings("static-method")

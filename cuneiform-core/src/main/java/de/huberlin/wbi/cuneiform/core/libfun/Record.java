@@ -2,26 +2,10 @@ package de.huberlin.wbi.cuneiform.core.libfun;
 
 public class Record implements Term {
 
-	private final String symbol;
 	private final Term[] termVec;
 	
-	public Record( String symbol, Term... termVec ) {
-		
-		if( symbol == null )
-			throw new IllegalArgumentException( "Symbol must not be null." );
-		
-		if( symbol.isEmpty() )
-			throw new IllegalArgumentException( "Symbol must not be empty." );
-		
-		if( symbol.charAt( 0 ) < 97 || symbol.charAt( 0 ) > 122 )
-			throw new IllegalArgumentException( "Symbol must start with a lower case letter: ["+symbol+"]" );
-		
-		this.symbol = symbol;
+	public Record( Term... termVec ) {		
 		this.termVec = termVec;
-	}
-
-	public String getSymbol() {
-		return symbol;
 	}
 
 	public int length() {
@@ -38,9 +22,6 @@ public class Record implements Term {
 			return false;
 		
 		other = ( Record )obj;
-		
-		if( !symbol.equals( other.symbol ) )
-			return false;
 		
 		if( termVec.length != other.termVec.length )
 			return false;
@@ -69,9 +50,6 @@ public class Record implements Term {
 		
 		record = ( Record )other;
 		
-		if( !symbol.equals( record.symbol ) )
-			return false;
-			
 		if( termVec.length != record.termVec.length )
 			return false;
 		
@@ -86,13 +64,21 @@ public class Record implements Term {
 	public String print() {
 		
 		StringBuffer buf;
+		boolean comma;
 		
 		buf = new StringBuffer();
 		
-		buf.append( '{' ).append( symbol );
+		buf.append( '{' );
 		
-		for( Term t : termVec )
-			buf.append( ',' ).append( t.print() );
+		comma = false;
+		for( Term t : termVec ) {
+			
+			if( comma )
+				buf.append( ',' );
+			comma = true;
+			
+			buf.append( t.print() );
+		}
 		
 		buf.append( '}' );
 		
@@ -101,7 +87,7 @@ public class Record implements Term {
 
 	@Override
 	public int hashCode() {
-		return symbol.hashCode();
+		return termVec.length;
 	}
 
 	@Override

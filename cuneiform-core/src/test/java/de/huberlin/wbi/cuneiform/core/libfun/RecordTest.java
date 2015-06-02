@@ -1,10 +1,11 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
 import static de.huberlin.wbi.cuneiform.core.libfun.Constant.constantFrom;
+import static de.huberlin.wbi.cuneiform.core.libfun.Atom.atomFrom;
+import static de.huberlin.wbi.cuneiform.core.libfun.Nil.NIL;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,52 +13,19 @@ import org.junit.runner.RunWith;
 @RunWith( JUnitParamsRunner.class )
 public class RecordTest {
 	
-	@SuppressWarnings({ "static-method", "unused" })
-	@Test( expected=IllegalArgumentException.class )
-	@Parameters( method="getIllegalSymbol" )
-	public void constructorShouldThrowIaeOnIllegalSymbol( String symbol ) {
-		new Record( symbol );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void emptyRecordWithEqualSymbolShouldBeEqual() {
-		
-		Record r1, r2;
-		String s;
-		
-		s = "bla";
-		
-		r1 = new Record( s );
-		r2 = new Record( s );
-		
-		assertEquals( r1, r2 );
-		assertEquals( r2, r1 );
-	}
-	
-	@SuppressWarnings("static-method")
-	public Object[] getIllegalSymbol() {
-		return new Object[][] {{null}, {""}, {"X"}, {"`"}, {"{"}, {"0"}};
-	}
-	
-	@SuppressWarnings("static-method")
-	public Object[] getValidSymbol() {
-		return new Object[][] {{"bla"}, {"blub"}, {"x"}, {"a"}, {"z"}, {"aA"} };
-	}
+
 	
 	@SuppressWarnings("static-method")
 	@Test
 	public void lengthShouldBeDerivable() {
 		
 		Record r;
-		String symbol;
 		Constant<String> c;
 		
-		symbol = "blub";
 		
 		c = new Constant<>( "my new content" );
 		
-		r = new Record( symbol, c );
+		r = new Record( c );
 		assertEquals( 1, r.length() );
 	}
 	
@@ -65,10 +33,9 @@ public class RecordTest {
 	@Test
 	public void printRecordShouldReturnProperRecord() {
 		
-		Term record, member;
-		String symbol;
+		Term record, member, symbol;
 		
-		symbol = "bla";
+		symbol = atomFrom( "bla" );
 		member = constantFrom( "blub" );
 		record = new Record( symbol, member );
 		
@@ -81,8 +48,18 @@ public class RecordTest {
 	public void recordEqualsNullShouldReturnFalse() {
 		
 		Record r;
-		r = new Record( "bla", mock( Term.class ) );
+		r = new Record( mock( Term.class ) );
 		assertNotEquals( r, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void recordEqualsNonRecordReturnFalse() {
+		
+		Record r;
+		r = new Record( mock( Term.class ) );
+		assertNotEquals( r, NIL );
+		assertNotEquals( NIL, r );
 	}
 
 	@SuppressWarnings("static-method")
@@ -90,12 +67,9 @@ public class RecordTest {
 	public void recordsOfDifferingSizeShouldNotBeEqual() {
 		
 		Record r1, r2;
-		String s;
 		
-		s = "bla";
-		
-		r1 = new Record( s );
-		r2 = new Record( s, mock( Term.class ) );
+		r1 = new Record();
+		r2 = new Record( mock( Term.class ) );
 		
 		assertNotEquals( r1, r2 );
 		assertNotEquals( r2, r1 );
@@ -106,14 +80,12 @@ public class RecordTest {
 	public void recordsWithEqualTermVecShouldBeEqual() {
 		
 		Record r1, r2;
-		String s;
 		Term t;
 		
-		s = "bla";
 		t = mock( Term.class );
 		
-		r1 = new Record( s, t );
-		r2 = new Record( s, t );
+		r1 = new Record( t );
+		r2 = new Record( t );
 		
 		assertEquals( r1, r2 );
 		assertEquals( r2, r1 );
@@ -124,15 +96,13 @@ public class RecordTest {
 	public void recordsWithUnequalTermVecShouldNotBeEqual() {
 		
 		Record r1, r2;
-		String s;
 		Term t1, t2;
 		
-		s = "bla";
 		t1 = mock( Term.class );
 		t2 = mock( Term.class );
 		
-		r1 = new Record( s, t1 );
-		r2 = new Record( s, t2 );
+		r1 = new Record( t1 );
+		r2 = new Record( t2 );
 		
 		assertNotEquals( r1, r2 );
 		assertNotEquals( r2, r1 );
@@ -140,51 +110,24 @@ public class RecordTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	@Parameters( method="getValidSymbol" )
-	public void symbolShouldBeRetrievable( String symbol ) {
-		
-		Record r;
-		
-		r = new Record( symbol );
-		assertEquals( symbol, r.getSymbol() );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	@Parameters( method="getValidSymbol" )
-	public void unifyOfEmptyRecordsWithEqualNameShouldReturnTrue( String symbol ) {
+	public void unifyRecordsWithEqualContentShouldReturnTrue() {
 		
 		Record r1, r2;
 		
-		r1 = new Record( symbol );
-		r2 = new Record( symbol );
-		
+		r1 = new Record( new Constant<>( "blub" ) );
+		r2 = new Record( new Constant<>( "blub" ) );
 		assertTrue( r1.unify( r2 ) );
 		assertTrue( r2.unify( r1 ) );
 	}
 	
 	@SuppressWarnings("static-method")
 	@Test
-	@Parameters( method="getValidSymbol" )
-	public void unifyRecordsWithEqualContentShouldReturnTrue( String symbol ) {
+	public void unifyRecordsWithGoodPlaceholderShouldReturnTrue() {
 		
 		Record r1, r2;
 		
-		r1 = new Record( symbol, new Constant<>( "blub" ) );
-		r2 = new Record( symbol, new Constant<>( "blub" ) );
-		assertTrue( r1.unify( r2 ) );
-		assertTrue( r2.unify( r1 ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	@Parameters( method="getValidSymbol" )
-	public void unifyRecordsWithGoodPlaceholderShouldReturnTrue( String symbol ) {
-		
-		Record r1, r2;
-		
-		r1 = new Record( symbol, new Placeholder() );
-		r2 = new Record( symbol, new Constant<>( "blub" ) );
+		r1 = new Record( new Placeholder() );
+		r2 = new Record( new Constant<>( "blub" ) );
 		assertTrue( r1.unify( r2 ) );
 	}
 	
@@ -193,15 +136,13 @@ public class RecordTest {
 	public void unifyRecordWithDifferingFieldsShouldReturnFalse() {
 		
 		Record r1, r2;
-		String symbol;
 		Term c1, c2;
 		
-		symbol = "bla";
 		c1 = mock( Term.class );
 		c2 = mock( Term.class );
 		
-		r1 = new Record( symbol, c1 );
-		r2 = new Record( symbol, c2 );
+		r1 = new Record( c1 );
+		r2 = new Record( c2 );
 		
 		assertFalse( r1.unify( r2 ) );
 		assertFalse( r2.unify( r1 ) );
@@ -215,12 +156,9 @@ public class RecordTest {
 	public void unifyRecordWithDifferingLengthShouldReturnFalse() {
 		
 		Record r1, r2;
-		String symbol;
 		
-		symbol = "bla";
-		
-		r1 = new Record( symbol );
-		r2 = new Record( symbol, mock( Cons.class ) );
+		r1 = new Record();
+		r2 = new Record( mock( Term.class ) );
 		
 		assertFalse( r1.unify( r2 ) );
 		assertFalse( r2.unify( r1 ) );
@@ -233,7 +171,7 @@ public class RecordTest {
 		Record r;
 		Cons c;
 		
-		r = new Record( "bla" );
+		r = new Record();
 		c = mock( Cons.class );
 		assertFalse( r.unify( c ) );
 	}
@@ -245,13 +183,11 @@ public class RecordTest {
 	public void unifyRecordWithNullShouldThrowIae() {
 		
 		Record r;
-		String s;
 		Term t;
 		
-		s = "blub";
 		t = mock( Term.class );
 		
-		r = new Record( s, t );
+		r = new Record( t );
 		r.unify( null );
 	}
 	
@@ -262,7 +198,7 @@ public class RecordTest {
 		Record r;
 		Placeholder ph;
 		
-		r = new Record( "bla", mock( Term.class ) );
+		r = new Record( mock( Term.class ) );
 		ph = new Placeholder();
 		r.unify( ph );
 	}
@@ -273,8 +209,32 @@ public class RecordTest {
 		
 		Record r;
 		
-		r = new Record( "bla", new Constant<>( "blub" ) );
+		r = new Record( new Constant<>( "blub" ) );
 		assertTrue( r.unify( r ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unificationShouldRetrieveFieldsInRecord() {
+		
+		Record concrete, pattern;
+		Constant<String> value1;
+		Constant<Integer> value2;
+		Placeholder x, y;
+		
+		value1 = constantFrom( "blub" );
+		value2 = constantFrom( 54 );
+		
+		concrete = new Record( value1, value2 );
+		
+		x = new Placeholder();
+		y = new Placeholder();
+		pattern = new Record( x, y );
+		
+		assertTrue( pattern.unify( concrete ) );
+		
+		assertEquals( value1, x.getSpecializedValue() );
+		assertEquals( value2, y.getSpecializedValue() );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -285,7 +245,7 @@ public class RecordTest {
 		Record r;
 		
 		t = mock( Term.class );
-		r = new Record( "bla", t );
+		r = new Record( t );
 		
 		r.unspecialize();
 		verify( t ).unspecialize();
