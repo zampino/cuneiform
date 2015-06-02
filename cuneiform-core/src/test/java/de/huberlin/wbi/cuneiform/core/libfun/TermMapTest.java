@@ -1,8 +1,8 @@
 package de.huberlin.wbi.cuneiform.core.libfun;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import static de.huberlin.wbi.cuneiform.core.libfun.Nil.NIL;
 
 import org.junit.Test;
 
@@ -47,7 +47,7 @@ public class TermMapTest {
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
-	@Test( expected=PhIsKeyInTermMapException.class )
+	@Test( expected=PhAsKeyInTermMapException.class )
 	public void constructThrowsUpeOnPhKey() {
 		new TermMap( new Placeholder(), mock( Term.class ) );
 	}
@@ -64,7 +64,7 @@ public class TermMapTest {
 	
 	@SuppressWarnings("static-method")
 	@Test( expected=UnboundKeyException.class )
-	public void getUnboundVarShouldThrowUve() {
+	public void getUnboundKeyShouldThrowUve() {
 		
 		TermMap m;
 		
@@ -74,7 +74,7 @@ public class TermMapTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void getUnboundVarWithDefaultShouldReturnDefault() {
+	public void getUnboundKeyWithDefaultShouldReturnDefault() {
 		
 		TermMap m;
 		Term def;
@@ -83,6 +83,42 @@ public class TermMapTest {
 		def = mock( Term.class );
 		
 		assertEquals( def, m.get( mock( Term.class ), def ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=IllegalArgumentException.class )
+	public void getNullWithDefaultShouldThrowIae() {
+		
+		TermMap m;
+		Term def;
+		
+		m = new TermMap();
+		def = mock( Term.class );
+		
+		m.get( null, def );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=PhAsKeyInTermMapException.class )
+	public void getPlaceholderWithDefaultShouldThrowUpe() {
+		
+		TermMap m;
+		Term def;
+		
+		m = new TermMap();
+		def = mock( Term.class );
+		
+		m.get( new Placeholder(), def );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=IllegalArgumentException.class )
+	public void getWithNullDefaultShouldThrowIae() {
+		
+		TermMap m;
+		
+		m = new TermMap();
+		m.get( mock( Term.class ), null );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -144,6 +180,16 @@ public class TermMapTest {
 	}
 	
 	@SuppressWarnings("static-method")
+	@Test( expected=IllegalArgumentException.class )
+	public void mergeWithNullShouldThrowIae() {
+		
+		TermMap tm;
+		
+		tm = new TermMap();
+		tm.merge( null );
+	}
+	
+	@SuppressWarnings("static-method")
 	@Test
 	public void putLeavesOriginalMapUnchanged() {
 		
@@ -199,7 +245,7 @@ public class TermMapTest {
 	}
 	
 	@SuppressWarnings("static-method")
-	@Test( expected=PhIsKeyInTermMapException.class )
+	@Test( expected=PhAsKeyInTermMapException.class )
 	public void putThrowsUpeOnPhKey() {
 		
 		TermMap tm;
@@ -228,5 +274,111 @@ public class TermMapTest {
 		
 		tm = new TermMap( mock( Term.class ), mock( Term.class ) );
 		tm.unify( null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=PhAsKeyInTermMapException.class )
+	public void getPlaceholderShouldThrowUpe() {
+		
+		TermMap tm;
+		
+		tm = new TermMap( mock( Term.class ), mock( Term.class ) );
+		tm.get( new Placeholder() );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifySelfReturnsTrue() {
+		
+		TermMap tm;
+		Term key;
+		Term value;
+		
+		key = mock( Term.class );
+		when( key.unify( key ) ).thenReturn( true );
+		
+		value = mock( Term.class );
+		when( value.unify( value ) ).thenReturn( true );
+		
+		tm = new TermMap( key, value );
+		assertTrue( tm.unify( tm ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifyWithNonTermMapShouldReturnFalse() {
+		
+		TermMap tm;
+		
+		tm = new TermMap( mock( Term.class ), mock( Term.class ) );
+		assertFalse( tm.unify( NIL ) );
+		assertFalse( NIL.unify( tm ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unificationOfTermMapsWithDifferingSizesShouldReturnFalse() {
+		
+		TermMap tm1, tm2;
+		
+		tm1 = new TermMap( mock( Term.class ), mock( Term.class ) );
+		tm2 = new TermMap();
+		assertFalse( tm1.unify( tm2 ) );
+		assertFalse( tm2.unify( tm1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unificationOfTermMapsWithDifferingKeysShouldReturnFalse() {
+		
+		TermMap tm1, tm2;
+		
+		tm1 = new TermMap( mock( Term.class ), mock( Term.class ) );
+		tm2 = new TermMap( mock( Term.class ), mock( Term.class ) );
+		assertFalse( tm1.unify( tm2 ) );
+		assertFalse( tm2.unify( tm1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void hasKeyReturnsTrueOnExistingKey() {
+		
+		TermMap tm;
+		Term key;
+		
+		key = mock( Term.class );
+		
+		tm = new TermMap( key, mock( Term.class ) );
+		assertTrue( tm.isKey( key ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void hasKeyReturnsFalseOnNonExistingKey() {
+		
+		TermMap tm;
+		tm = new TermMap( mock( Term.class ), mock( Term.class ) );
+		assertFalse( tm.isKey( mock( Term.class ) ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unificationIsDeferredToValues() {
+		
+		Term value;
+		Constant<String> key;
+		TermMap tm1, tm2;
+		
+		key = new Constant<>( "blub" );
+		
+		value = mock( Term.class );
+		when( value.unify( value ) ).thenReturn( true ); 
+		
+		tm1 = new TermMap( key, value );
+		tm2 = new TermMap( key, value );
+		
+		assertTrue( tm1.unify( tm2 ) );
+		verify( value ).unify( value );
+		
 	}
 }

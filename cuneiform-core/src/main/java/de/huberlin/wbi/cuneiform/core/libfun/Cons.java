@@ -20,12 +20,12 @@ public class Cons extends List {
 	}
 
 	@Override
-	public Term getHead() {
+	public Term hd() {
 		return head;
 	}
 	
 	@Override
-	public List getTail() {
+	public List tl() {
 		return tail;
 	}
 	
