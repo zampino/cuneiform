@@ -2,7 +2,7 @@ package de.huberlin.wbi.cuneiform.core.libfun;
 
 import java.util.HashMap;
 
-public class TermMap {
+public class TermMap implements Term {
 
 	private final HashMap<Term,Term> content;
 	
@@ -70,5 +70,30 @@ public class TermMap {
 	
 	public boolean isEmpty() {
 		return content.isEmpty();
+	}
+
+	@Override
+	public boolean unify( Term other ) {
+		
+		if( other == null )
+			throw new IllegalArgumentException( "Other term must not be null." );
+		
+		if( other instanceof Placeholder )
+			throw new UnexpectedPlaceholderException( ( Placeholder )other );
+		
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String print() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void unspecialize() {
+		// TODO Auto-generated method stub
+		
 	}
 }

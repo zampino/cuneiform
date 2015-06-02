@@ -57,7 +57,23 @@ public class NilTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void unifyEmptyListShouldReturnTrue() {
+	public void unifyWithSelfShouldReturnTrue() {
 		assertTrue( NIL.unify( NIL ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=UnexpectedPlaceholderException.class )
+	public void unifyNilWithPhShouldThrowUpe() {
+		
+		Placeholder ph;
+		
+		ph = new Placeholder( "X" );
+		NIL.unify( ph );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=IllegalArgumentException.class )
+	public void unifyWithNullShouldThrowIae() {
+		NIL.unify( null );
 	}
 }

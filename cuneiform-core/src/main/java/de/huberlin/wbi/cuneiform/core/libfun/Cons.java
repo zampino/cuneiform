@@ -35,7 +35,10 @@ public class Cons extends List {
 		Cons cons;
 		
 		if( other == null )
-			throw new IllegalArgumentException( "Term to unify with must not be null." );
+			throw new IllegalArgumentException( "Ohter term must not be null." );
+		
+		if( other instanceof Placeholder )
+			throw new UnexpectedPlaceholderException( ( Placeholder )other );
 		
 		if( !( other instanceof Cons ) )
 			return false;

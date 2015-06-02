@@ -157,13 +157,6 @@ public class PlaceholderTest {
 	}
 	
 	@SuppressWarnings("static-method")
-	@Test( expected=UnexpectedPlaceholderException.class )
-	@Parameters( method="getConcreteTerm" )
-	public void unifyAnythingWithPhShouldThrowUve( Term concreteTerm ) {
-		concreteTerm.unify( new Placeholder( "Bla" ) );
-	}
-	
-	@SuppressWarnings("static-method")
 	@Test
 	@Parameters( method="getConcreteTerm" )
 	public void unifyPhWithAnythingShouldReturnTrue( Term concreteTerm ) {
@@ -175,13 +168,26 @@ public class PlaceholderTest {
 	}
 	
 	@SuppressWarnings("static-method")
-	@Parameters( method="getConcreteTerm" )
 	@Test( expected=IllegalArgumentException.class )
-	public void unifyWithNullShouldThrowIae( Term concreteTerm ) {
-		concreteTerm.unify( null );
+	public void unifyPhWithNullShouldThrowIae() {
+		
+		Placeholder ph;
+		
+		ph = new Placeholder( "X" );
+		ph.unify( null );
 	}
 	
-
+	@SuppressWarnings("static-method")
+	@Test( expected=UnexpectedPlaceholderException.class )
+	public void unifyPhWithPhShouldThrowUpe() {
+		
+		
+		Placeholder ph1, ph2;
+		
+		ph1 = new Placeholder( "X" );
+		ph2 = new Placeholder( "Y" );
+		ph1.unify( ph2 );
+	}
 	
 	// TODO:
 	// - disallow superseding of specialization
