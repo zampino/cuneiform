@@ -52,7 +52,7 @@ public class ConsTest {
 		Placeholder ph;
 		
 		c = new Cons( mock( Term.class ), mock( List.class ) );
-		ph = new Placeholder( "X" );
+		ph = new Placeholder();
 		c.unify( ph );
 	}
 	

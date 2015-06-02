@@ -146,7 +146,7 @@ public class TermMapTest {
 		Placeholder ph;
 		
 		tm = new TermMap( mock( Term.class ), mock( Term.class ) );
-		ph = new Placeholder( "X" );
+		ph = new Placeholder();
 		tm.unify( ph );
 	}
 }

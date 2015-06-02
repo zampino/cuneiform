@@ -67,7 +67,7 @@ public class NilTest {
 		
 		Placeholder ph;
 		
-		ph = new Placeholder( "X" );
+		ph = new Placeholder();
 		NIL.unify( ph );
 	}
 	
