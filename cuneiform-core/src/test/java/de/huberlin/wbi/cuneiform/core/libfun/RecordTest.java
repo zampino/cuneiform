@@ -179,7 +179,7 @@ public class RecordTest {
 		Placeholder ph;
 		
 		r = new Record( "bla", mock( Term.class ) );
-		ph = new Placeholder( "X" );
+		ph = new Placeholder();
 		r.unify( ph );
 	}
 	
@@ -227,7 +227,7 @@ public class RecordTest {
 		
 		Record r1, r2;
 		
-		r1 = new Record( symbol, new Placeholder( "X" ) );
+		r1 = new Record( symbol, new Placeholder() );
 		r2 = new Record( symbol, new Constant<>( "blub" ) );
 		assertTrue( r1.unify( r2 ) );
 	}

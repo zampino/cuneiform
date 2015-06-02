@@ -313,7 +313,7 @@ public class ConstantTest {
 		Placeholder ph;
 		
 		c = new Constant<>( "blub" );
-		ph = new Placeholder( "X" );
+		ph = new Placeholder();
 		c.unify( ph );
 	}
 
