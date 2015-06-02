@@ -8,6 +8,13 @@ public class Nil extends List {
 
 	@Override
 	public boolean unify( Term other ) {
+		
+		if( other == null )
+			throw new IllegalArgumentException( "Other term must not be null." );
+		
+		if( other instanceof Placeholder )
+			throw new UnexpectedPlaceholderException( ( Placeholder )other );
+		
 		return this == other;
 	}
 
@@ -17,7 +24,9 @@ public class Nil extends List {
 	}
 
 	@Override
-	public void unspecialize() {}
+	public void unspecialize() {
+		// unspecialize leaves nil untouched
+	}
 
 	@Override
 	public Term getHead() {

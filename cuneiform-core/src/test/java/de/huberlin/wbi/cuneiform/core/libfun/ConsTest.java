@@ -31,7 +31,7 @@ public class ConsTest {
 	
 	@SuppressWarnings("static-method")
 	@Test( expected=IllegalArgumentException.class )
-	public void unifyShouldThrowIaeOnNullTerm() {
+	public void unifyWithNullShouldThrowIae() {
 		
 		Term t;
 		List l;
@@ -42,6 +42,18 @@ public class ConsTest {
 		
 		c = new Cons( t, l );
 		c.unify( null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=UnexpectedPlaceholderException.class )
+	public void unifyConsWithPhShouldThrowUpe() {
+		
+		Cons c;
+		Placeholder ph;
+		
+		c = new Cons( mock( Term.class ), mock( List.class ) );
+		ph = new Placeholder( "X" );
+		c.unify( ph );
 	}
 	
 	@SuppressWarnings("static-method")

@@ -20,6 +20,9 @@ public class Constant<T> implements Term {
 	@Override
 	public boolean unify( Term other ) {
 		
+		if( other == null )
+			throw new IllegalArgumentException( "Other term must not be null." );
+		
 		if( other instanceof Placeholder )
 			throw new UnexpectedPlaceholderException( ( Placeholder )other );
 		
@@ -52,7 +55,9 @@ public class Constant<T> implements Term {
 
 
 	@Override
-	public void unspecialize() {}
+	public void unspecialize() {
+		// unspecialize leaves constant untouched
+	}
 	
 	public static Constant<String> constantFrom( String value ) {
 		return new Constant<>( value );

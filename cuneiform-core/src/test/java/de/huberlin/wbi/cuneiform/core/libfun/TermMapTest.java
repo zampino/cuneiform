@@ -127,4 +127,26 @@ public class TermMapTest {
 		m = new TermMap();
 		m.get( null );
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=IllegalArgumentException.class )
+	public void unifyTmWithNullShouldThrowIae() {
+		
+		TermMap tm;
+		
+		tm = new TermMap( mock( Term.class ), mock( Term.class ) );
+		tm.unify( null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=UnexpectedPlaceholderException.class )
+	public void unifyRecordWithPhShouldThrowUpe() {
+		
+		TermMap tm;
+		Placeholder ph;
+		
+		tm = new TermMap( mock( Term.class ), mock( Term.class ) );
+		ph = new Placeholder( "X" );
+		tm.unify( ph );
+	}
 }

@@ -148,6 +148,33 @@ public class RecordTest {
 	}
 	
 	@SuppressWarnings("static-method")
+	@Test( expected=IllegalArgumentException.class )
+	public void unifyWithNullShouldThrowIae() {
+		
+		Record r;
+		String s;
+		Term t;
+		
+		s = "blub";
+		t = mock( Term.class );
+		
+		r = new Record( s, t );
+		r.unify( null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=UnexpectedPlaceholderException.class )
+	public void unifyRecordWithPhShouldThrowUpe() {
+		
+		Record r;
+		Placeholder ph;
+		
+		r = new Record( "bla", mock( Term.class ) );
+		ph = new Placeholder( "X" );
+		r.unify( ph );
+	}
+	
+	@SuppressWarnings("static-method")
 	@Test
 	@Parameters( method="getValidSymbol" )
 	public void unifyOfEmptyRecordsWithEqualNameShouldReturnTrue( String symbol ) {

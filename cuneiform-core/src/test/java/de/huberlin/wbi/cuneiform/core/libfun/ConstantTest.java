@@ -16,15 +16,31 @@ public class ConstantTest {
 	 */
 	
 	@SuppressWarnings("static-method")
-	public Object[] getValidStringConstantContent() {
-		return new Object[][] { {""}, {"1"}, {"bla"}, {"Bla"}, {"BLA"}};
+	@Test
+	public void constantFromIntShouldRememberContent() {
+		
+		Constant<Integer> c;
+		Integer content;
+		
+		content = 4;
+		c = constantFrom( content );
+		
+		assertEquals( content, c.getContent() );
+		
 	}
 
 
 	@SuppressWarnings("static-method")
-	public Object[] getValidIntegerConstantContent() {
-		return new Object[][]
-		{ {0}, {1873465}, {-3124}, {Integer.MAX_VALUE}, {Integer.MIN_VALUE}};
+	@Test
+	public void constantFromStringShouldRememberContent() {
+		
+		Constant<String> c;
+		String content;
+		
+		content = "bla";
+		
+		c = constantFrom( content );
+		assertEquals( content, c.getContent() );
 	}
 
 	
@@ -32,34 +48,10 @@ public class ConstantTest {
 	 * Actual tests
 	 */
 
-	@SuppressWarnings({ "static-method", "unused" })
+	@SuppressWarnings("static-method")
 	@Test( expected=IllegalArgumentException.class )
-	public void constructorShouldThrowIaeOnNullArg() {
-		new Constant<String>( null );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	@Parameters( method="getValidStringConstantContent" )
-	public void contentShouldBeRetrievable( String content ) {
-		
-		Constant<String> c;
-
-		c = new Constant<>( content );
-		
-		assertEquals( content, c.getContent() );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	@Parameters( method="getValidIntegerConstantContent" )
-	public void contentShouldBeRetrievable( Integer content ) {
-		
-		Constant<Integer> c;
-
-		c = new Constant<>( content );
-		
-		assertEquals( content, c.getContent() );
+	public void constantFromStringShouldThrowIaeOnNullContent() {
+		constantFrom( null );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -77,19 +69,155 @@ public class ConstantTest {
 		assertTrue( c2.equals( c1 ) );
 	}
 	
-
-
 	@SuppressWarnings("static-method")
 	@Test
-	public void printStringConstantShouldQuoteContent() {
+	@Parameters( method="getValidIntegerConstantContent" )
+	public void constantsWithEqualIntContentShouldHaveEqualHashcodes( Integer validInt ) {
 		
-		Term t;
-		String content;
+		Constant<Integer> c1;
+		Constant<Integer> c2;
 		
-		content = "bla";
+		c1 = new Constant<>( validInt );
+		c2 = new Constant<>( validInt );
 		
-		t = new Constant<>( content );
-		assertEquals( "\""+content+"\"", t.print() );
+		assertEquals( c1.hashCode(), c2.hashCode() );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	@Parameters( method="getValidStringConstantContent" )
+	public void constantsWithEqualStringContentShouldHaveEqualHashcodes( String validString ) {
+		
+		Constant<String> c1;
+		Constant<String> c2;
+		
+		c1 = new Constant<>( validString );
+		c2 = new Constant<>( validString );
+		
+		assertEquals( c1.hashCode(), c2.hashCode() );
+	}
+	
+
+
+	@SuppressWarnings({ "static-method", "unused" })
+	@Test( expected=IllegalArgumentException.class )
+	public void constructorShouldThrowIaeOnNullArg() {
+		new Constant<String>( null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	@Parameters( method="getValidIntegerConstantContent" )
+	public void contentShouldBeRetrievable( Integer content ) {
+		
+		Constant<Integer> c;
+
+		c = new Constant<>( content );
+		
+		assertEquals( content, c.getContent() );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	@Parameters( method="getValidStringConstantContent" )
+	public void contentShouldBeRetrievable( String content ) {
+		
+		Constant<String> c;
+
+		c = new Constant<>( content );
+		
+		assertEquals( content, c.getContent() );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	@Parameters( method="getValidIntegerConstantContent" )
+	public void equalsConstantWithEqualIntValueShouldReturnTrue( Integer validInt ) {
+		
+		Constant<Integer> c1;
+		Constant<Integer> c2;
+		
+		c1 = new Constant<>( validInt );
+		c2 = new Constant<>( validInt );
+		
+		assertTrue( c1.equals( c2 ) );
+		assertTrue( c2.equals( c1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	@Parameters( method="getValidStringConstantContent" )
+	public void equalsConstantWithEqualStringValueShouldReturnTrue( String validString ) {
+		
+		Constant<String> c1;
+		Constant<String> c2;
+		
+		c1 = new Constant<>( validString );
+		c2 = new Constant<>( validString );
+		
+		assertTrue( c1.equals( c2 ) );
+		assertTrue( c2.equals( c1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsConstantWithNonEqualValueShouldReturnFalse() {
+		
+		Constant<String> c1;
+		Constant<String> c2;
+		
+		c1 = new Constant<>( "blub" );
+		c2 = new Constant<>( "bla" );
+		
+		assertFalse( c1.equals( c2 ) );
+		assertFalse( c2.equals( c1 ) );
+	}
+	
+
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsDifferentClassShouldReturnFalse() {
+		
+		Constant<String> c;
+		
+		c = new Constant<>( "blub" );
+		assertFalse( c.equals( 5 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsNullShouldReturnFalse() {
+		
+		Constant<String> c;
+		
+		c = new Constant<>( "blub" );
+		assertFalse( c.equals( null ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	@Parameters( method="getValidStringConstantContent" )
+	public void equalsSelfShouldReturnTrue( String validString ) {
+		
+		Term t1;
+
+		t1 = new Constant<>( validString );
+		
+		assertTrue( t1.equals( t1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	public Object[] getValidIntegerConstantContent() {
+		return new Object[][]
+		{ {0}, {1873465}, {-3124}, {Integer.MAX_VALUE}, {Integer.MIN_VALUE}};
+	}
+	
+	// public void unifyPlaceholderShouldThrowUpe
+	
+	@SuppressWarnings("static-method")
+	public Object[] getValidStringConstantContent() {
+		return new Object[][] { {""}, {"1"}, {"bla"}, {"Bla"}, {"BLA"}};
 	}
 	
 	@SuppressWarnings("static-method")
@@ -106,81 +234,17 @@ public class ConstantTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void constantFromStringShouldRememberContent() {
+	public void printStringConstantShouldQuoteContent() {
 		
-		Constant<String> c;
+		Term t;
 		String content;
 		
 		content = "bla";
 		
-		c = constantFrom( content );
-		assertEquals( content, c.getContent() );
+		t = new Constant<>( content );
+		assertEquals( "\""+content+"\"", t.print() );
 	}
-	
-	@SuppressWarnings("static-method")
-	@Test( expected=IllegalArgumentException.class )
-	public void constantFromStringShouldThrowIaeOnNullContent() {
-		constantFrom( null );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void constantFromIntShouldRememberContent() {
-		
-		Constant<Integer> c;
-		Integer content;
-		
-		content = 4;
-		c = constantFrom( content );
-		
-		assertEquals( content, c.getContent() );
-		
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void equalsShouldReturnTrueOnSelf() {
-		
-		String content;
-		Term t1;
-		
-		content = "bla";
-		
-		t1 = new Constant<>( content );
-		
-		assertTrue( t1.equals( t1 ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void equalsShouldReturnTrueOnStringConstantsWithEqualContent() {
-		
-		String content;
-		Term t1, t2;
-		
-		content = "bla";
-		
-		t1 = new Constant<>( content );
-		t2 = new Constant<>( content );
-		
-		assertTrue( t1.equals( t2 ) );
-		assertTrue( t2.equals( t1 ) );
-	}
-	
-	@SuppressWarnings("static-method")
-	@Test
-	public void equalsShouldReturnFalseOnDifferingStringConstants() {
-		
-		Term t1, t2;
-		
-		
-		t1 = new Constant<>( "bla" );
-		t2 = new Constant<>( "blub" );
-		
-		assertFalse( t1.equals( t2 ) );
-		assertFalse( t2.equals( t1 ) );
-	}
-	
+
 	@SuppressWarnings("static-method")
 	@Test
 	@Parameters( method="getValidStringConstantContent" )
@@ -209,6 +273,28 @@ public class ConstantTest {
 		assertFalse( c2.unify( c1 ) );
 	}
 	
+	@SuppressWarnings("static-method")
+	@Test( expected=IllegalArgumentException.class )
+	public void unifyConstantWithNullShouldThrowIae() {
+		
+		Constant<String> c;
+		
+		c = new Constant<>( "blub" );
+		c.unify( null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=UnexpectedPlaceholderException.class )
+	public void unifyConstantWithPhShouldThrowUpe() {
+		
+		Constant<String> c;
+		Placeholder ph;
+		
+		c = new Constant<>( "blub" );
+		ph = new Placeholder( "X" );
+		c.unify( ph );
+	}
+
 	@SuppressWarnings("static-method")
 	@Test
 	public void unspecializeDoesNotAffectConstant() {

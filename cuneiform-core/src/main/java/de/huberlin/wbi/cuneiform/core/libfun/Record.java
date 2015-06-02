@@ -58,6 +58,9 @@ public class Record implements Term {
 		Record record;
 		int i;
 		
+		if( other == null )
+			throw new IllegalArgumentException( "Other term must not be null." );
+		
 		if( other instanceof Placeholder )
 			throw new UnexpectedPlaceholderException( ( Placeholder )other );
 		
