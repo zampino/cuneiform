@@ -169,8 +169,9 @@ public class TermMap implements Term {
 
 	@Override
 	public void unspecialize() {
-		// TODO Auto-generated method stub
 		
+		for( Term value : content.values() )
+			value.unspecialize();
 	}
 
 	public boolean isKey( Term key ) {
