@@ -52,6 +52,15 @@ public class RecordTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
+	public void recordEqualsNullShouldReturnFalse() {
+		
+		Record r;
+		r = new Record( "bla", mock( Term.class ) );
+		assertNotEquals( r, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
 	public void lengthShouldBeDerivable() {
 		
 		Record r;
@@ -68,7 +77,7 @@ public class RecordTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void EmptyRecordWithEqualSymbolShouldBeEqual() {
+	public void emptyRecordWithEqualSymbolShouldBeEqual() {
 		
 		Record r1, r2;
 		String s;
@@ -137,7 +146,7 @@ public class RecordTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void unifyWithNonRecordShouldReturnFalse() {
+	public void unifyRecordWithNonRecordShouldReturnFalse() {
 		
 		Record r;
 		Cons c;
@@ -149,7 +158,7 @@ public class RecordTest {
 	
 	@SuppressWarnings("static-method")
 	@Test( expected=IllegalArgumentException.class )
-	public void unifyWithNullShouldThrowIae() {
+	public void unifyRecordWithNullShouldThrowIae() {
 		
 		Record r;
 		String s;
@@ -187,6 +196,43 @@ public class RecordTest {
 		assertTrue( r1.unify( r2 ) );
 		assertTrue( r2.unify( r1 ) );
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void unifyRecordWithSelfShouldReturnTrue() {
+		
+		Record r;
+		
+		r = new Record( "bla", new Constant<>( "blub" ) );
+		assertTrue( r.unify( r ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	@Parameters( method="getValidSymbol" )
+	public void unifyRecordsWithEqualContentShouldReturnTrue( String symbol ) {
+		
+		Record r1, r2;
+		
+		r1 = new Record( symbol, new Constant<>( "blub" ) );
+		r2 = new Record( symbol, new Constant<>( "blub" ) );
+		assertTrue( r1.unify( r2 ) );
+		assertTrue( r2.unify( r1 ) );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	@Parameters( method="getValidSymbol" )
+	public void unifyRecordsWithGoodPlaceholderShouldReturnTrue( String symbol ) {
+		
+		Record r1, r2;
+		
+		r1 = new Record( symbol, new Placeholder( "X" ) );
+		r2 = new Record( symbol, new Constant<>( "blub" ) );
+		assertTrue( r1.unify( r2 ) );
+	}
+	
+	
 	
 	@SuppressWarnings("static-method")
 	@Test

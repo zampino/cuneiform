@@ -140,8 +140,8 @@ public class ConstantTest {
 		c1 = new Constant<>( validInt );
 		c2 = new Constant<>( validInt );
 		
-		assertTrue( c1.equals( c2 ) );
-		assertTrue( c2.equals( c1 ) );
+		assertEquals( c1, c2 );
+		assertEquals( c2, c1 );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -155,8 +155,8 @@ public class ConstantTest {
 		c1 = new Constant<>( validString );
 		c2 = new Constant<>( validString );
 		
-		assertTrue( c1.equals( c2 ) );
-		assertTrue( c2.equals( c1 ) );
+		assertEquals( c1, c2 );
+		assertEquals( c2, c1 );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -169,8 +169,8 @@ public class ConstantTest {
 		c1 = new Constant<>( "blub" );
 		c2 = new Constant<>( "bla" );
 		
-		assertFalse( c1.equals( c2 ) );
-		assertFalse( c2.equals( c1 ) );
+		assertNotEquals( c1, c2 );
+		assertNotEquals( c2, c1 );
 	}
 	
 
@@ -182,7 +182,17 @@ public class ConstantTest {
 		Constant<String> c;
 		
 		c = new Constant<>( "blub" );
-		assertFalse( c.equals( 5 ) );
+		assertNotEquals( c, 5 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void equalsNullClassShouldReturnFalse() {
+		
+		Constant<String> c;
+		
+		c = new Constant<>( "blub" );
+		assertNotEquals( c, null );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -192,7 +202,7 @@ public class ConstantTest {
 		Constant<String> c;
 		
 		c = new Constant<>( "blub" );
-		assertFalse( c.equals( null ) );
+		assertNotEquals( c, null );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -204,7 +214,7 @@ public class ConstantTest {
 
 		t1 = new Constant<>( validString );
 		
-		assertTrue( t1.equals( t1 ) );
+		assertEquals( t1, t1 );
 	}
 	
 	@SuppressWarnings("static-method")
@@ -258,6 +268,18 @@ public class ConstantTest {
 		assertTrue( c1.unify( c2 ) );
 		assertTrue( c2.unify( c1 ) );
 		
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	@Parameters( method="getValidStringConstantContent" )
+	public void unifyConstantWithSelfShouldReturnTrue( String content ) {
+		
+		Constant<String> c;
+		
+		c = new Constant<>( content );
+		
+		assertTrue( c.unify( c ) );		
 	}
 	
 	@SuppressWarnings("static-method")

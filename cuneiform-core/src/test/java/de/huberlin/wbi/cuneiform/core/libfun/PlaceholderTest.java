@@ -70,10 +70,8 @@ public class PlaceholderTest {
 		abstractList = list( x, x );
 		concreteList = list( t, t );
 	
-		assertFalse( x.isSpecialized() );
 		assertTrue( abstractList.unify( concreteList ) );
 		assertTrue( x.isSpecialized() );
-		assertEquals( t, x.getSpecializedValue() );
 	}
 
 	@SuppressWarnings("static-method")
@@ -132,16 +130,18 @@ public class PlaceholderTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void unifyShouldMemorizeBoundValue() {
+	public void unifyShouldMemorizeSpecializedValue() {
 		
 		Term t;
 		Placeholder var;
 		
 		t = mock( Term.class );
-
 		var = new Placeholder( "X" );
+		
+		assertFalse( var.isSpecialized() );
 		assertTrue( var.unify( t ) );
 		assertEquals( t, var.getSpecializedValue() );
+		assertTrue( var.isSpecialized() );
 	}
 	
 	@SuppressWarnings("static-method")

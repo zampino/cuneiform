@@ -193,6 +193,17 @@ public class ConsTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
+	public void equalsNullShouldReturnFalse() {
+		
+		Cons c;
+		
+		c = new Cons( mock( Term.class ), mock( List.class ) );
+
+		assertNotEquals( c, null );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
 	public void equalsShouldReturnTrueOnEverythingEqual() {
 		
 		Cons c1, c2;
@@ -273,8 +284,7 @@ public class ConsTest {
 		
 		verify( h1 ).unify( h2 );
 		verify( t1 ).unify( t2 );
-	}
-	
+	}	
 
 	
 	@SuppressWarnings("static-method")
@@ -282,15 +292,16 @@ public class ConsTest {
 	public void unspecializeIsHandedDownThroughCons() {
 		
 		Term t;
-		Cons c1, c2;
+		Cons c;
+		List l;
 		
 		t = mock( Term.class );
-		c1 = mock( Cons.class );
+		l = mock( List.class );
 		
-		c2 = new Cons( t, c1 );
-		c2.unspecialize();
+		c = new Cons( t, l );
+		c.unspecialize();
 		
 		verify( t ).unspecialize();
-		verify( c1 ).unspecialize();
+		verify( l ).unspecialize();
 	}
 }

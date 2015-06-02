@@ -57,7 +57,7 @@ public class NilTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void unifyWithSelfShouldReturnTrue() {
+	public void unifyNilWithSelfShouldReturnTrue() {
 		assertTrue( NIL.unify( NIL ) );
 	}
 	
@@ -73,7 +73,7 @@ public class NilTest {
 	
 	@SuppressWarnings("static-method")
 	@Test( expected=IllegalArgumentException.class )
-	public void unifyWithNullShouldThrowIae() {
+	public void unifyNilWithNullShouldThrowIae() {
 		NIL.unify( null );
 	}
 }
