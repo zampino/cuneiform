@@ -3,11 +3,11 @@ package de.huberlin.wbi.cuneiform.core.libfun;
 import java.util.HashMap;
 import java.util.Set;
 
-public class TermMap implements Term {
+public class Map implements Term {
 
 	private final HashMap<Term,Term> content;
 	
-	public TermMap( Term key, Term value ) {
+	public Map( Term key, Term value ) {
 		this();
 		
 		if( key == null )
@@ -22,15 +22,15 @@ public class TermMap implements Term {
 		content.put( key, value );
 	}
 	
-	public TermMap() {
+	public Map() {
 		content = new HashMap<>();
 	}
 	
-	private TermMap( HashMap<Term,Term> content ) {
+	private Map( HashMap<Term,Term> content ) {
 		this.content = content;
 	}
 	
-	public TermMap put( Term key, Term value ) {
+	public Map put( Term key, Term value ) {
 		
 		HashMap<Term,Term> newContent;
 		
@@ -47,7 +47,7 @@ public class TermMap implements Term {
 		newContent.putAll( content );
 		newContent.put( key, value );
 		
-		return new TermMap( newContent );
+		return new Map( newContent );
 	}
 	
 	public Term get( Term key ) {
@@ -85,7 +85,7 @@ public class TermMap implements Term {
 		
 	}
 	
-	public TermMap merge( TermMap tm2 ) {
+	public Map merge( Map tm2 ) {
 		
 		HashMap<Term,Term> newContent;
 		
@@ -96,7 +96,7 @@ public class TermMap implements Term {
 		newContent.putAll( tm2.content );
 		newContent.putAll( content );
 		
-		return new TermMap( newContent );		
+		return new Map( newContent );		
 	}
 	
 	public int size() {
@@ -110,7 +110,7 @@ public class TermMap implements Term {
 	@Override
 	public boolean unify( Term other ) {
 		
-		TermMap tm2;
+		Map tm2;
 		
 		if( other == null )
 			throw new IllegalArgumentException( "Other term must not be null." );
@@ -118,10 +118,10 @@ public class TermMap implements Term {
 		if( other instanceof Placeholder )
 			throw new PhOnRightHandSideException();
 		
-		if( !( other instanceof TermMap ) )
+		if( !( other instanceof Map ) )
 			return false;
 		
-		tm2 = ( TermMap )other;
+		tm2 = ( Map )other;
 		
 		if( content.size() != tm2.size() )
 			return false;

@@ -5,7 +5,7 @@ import static de.huberlin.wbi.cuneiform.core.libfun.Atom.*;
 
 import de.huberlin.wbi.cuneiform.core.libfun.Record;
 
-public class Select extends Record {
+public class Select extends Record implements Expr {
 	
 	public static final String SYMBOL = "select";
 	
