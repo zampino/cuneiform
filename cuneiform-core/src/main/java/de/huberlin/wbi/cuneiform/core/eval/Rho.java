@@ -4,11 +4,14 @@ import de.huberlin.wbi.cuneiform.core.libfun.List;
 import de.huberlin.wbi.cuneiform.core.libfun.Map;
 import de.huberlin.wbi.cuneiform.core.typespec.Ticket;
 
-public abstract class Rho extends Map {
+public class Rho extends Map {
 	
 	private final TicketSrc ticketSrc;
 	
 	public Rho( TicketSrc ticketSrc ) {
+		
+		if( ticketSrc == null )
+			throw new IllegalArgumentException( "Ticket source must not be null." );
 		this.ticketSrc = ticketSrc;
 	}
 	
