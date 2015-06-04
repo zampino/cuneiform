@@ -3,6 +3,21 @@ package de.huberlin.wbi.cuneiform.core.libfun;
 
 public class Placeholder implements Term {
 	
+	public static final Placeholder ANY = new Placeholder() {
+		
+		@Override
+		public boolean unify( Term other ) {
+			
+			if( other == null )
+				throw new IllegalArgumentException( "Other term must not be null." );
+			
+			if( other instanceof Placeholder )
+				throw new PhOnRightHandSideException();
+			
+			return true;
+		}
+	};
+	
 	private Term specializedValue;
 	private boolean isSpecial;
 	

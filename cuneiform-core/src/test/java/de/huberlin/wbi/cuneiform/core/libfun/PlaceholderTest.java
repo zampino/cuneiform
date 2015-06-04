@@ -4,6 +4,7 @@ import static de.huberlin.wbi.cuneiform.core.libfun.Constant.constantFrom;
 import static de.huberlin.wbi.cuneiform.core.libfun.Atom.atomFrom;
 import static de.huberlin.wbi.cuneiform.core.libfun.List.list;
 import static de.huberlin.wbi.cuneiform.core.libfun.Nil.NIL;
+import static de.huberlin.wbi.cuneiform.core.libfun.Placeholder.ANY;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import junitparams.JUnitParamsRunner;
@@ -164,5 +165,19 @@ public class PlaceholderTest {
 		
 		ph = new Placeholder();
 		assertEquals( ph, ph );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void anyShouldAlwaysUnify() {
+		
+		Record lh, rh;
+		
+		lh = new Record( atomFrom( "bla" ), ANY, ANY );
+		rh = new Record( atomFrom( "bla" ), atomFrom( "a" ), atomFrom( "b" ) );
+		
+		assertFalse( ANY.isSpecialized() );
+		assertTrue( lh.unify( rh ) );
+		assertFalse( ANY.isSpecialized() );
 	}
 }
