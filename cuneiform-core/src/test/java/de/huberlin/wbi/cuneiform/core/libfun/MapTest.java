@@ -144,7 +144,7 @@ public class MapTest {
 	
 	@SuppressWarnings("static-method")
 	@Test
-	public void mergeFirstShouldSupersedeSecond() {
+	public void mergeSecondShouldSupersedeFirst() {
 		
 		Map m1, m2, m3;
 		Term key, value1, value2;
@@ -158,7 +158,7 @@ public class MapTest {
 		
 		m3 = m1.merge( m2 );
 		assertEquals( 1, m3.size() );
-		assertEquals( value1, m3.get( key ) );
+		assertEquals( value2, m3.get( key ) );
 	}
 	
 	@SuppressWarnings("static-method")

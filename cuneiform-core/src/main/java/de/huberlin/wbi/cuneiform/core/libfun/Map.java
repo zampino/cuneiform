@@ -93,8 +93,8 @@ public class Map implements Term {
 			throw new IllegalArgumentException( "Other term map must not be null." );
 		
 		newContent = new HashMap<>();
-		newContent.putAll( tm2.content );
 		newContent.putAll( content );
+		newContent.putAll( tm2.content );
 		
 		return new Map( newContent );		
 	}
