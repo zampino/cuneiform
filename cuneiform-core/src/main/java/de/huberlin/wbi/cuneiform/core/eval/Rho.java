@@ -12,10 +12,15 @@ public class Rho extends Map {
 		
 		if( ticketSrc == null )
 			throw new IllegalArgumentException( "Ticket source must not be null." );
+		
 		this.ticketSrc = ticketSrc;
 	}
 	
 	public List eval( List compoundExpr ) {
+		
+		if( compoundExpr == null )
+			throw new IllegalArgumentException( "Compound expression must not be null." );
+		
 		return null;
 	}
 
