@@ -37,4 +37,9 @@ public class Nil extends List {
 	public List tl() {
 		throw new InvalidOpOnNilException( "Cannot retrieve tail from nil." );
 	}
+
+	@Override
+	public int size() {
+		return 0;
+	}
 }

@@ -1025,7 +1025,6 @@ public class ReferenceTest {
 		ae.putAssign( new NameExpr( "i" ), new CompoundExpr( new StringExpr( "2" ) ) );
 		
 		tlc.putAssign( new NameExpr( "rec" ), new CompoundExpr( recLam ) );
-		System.out.println( tlc );
 		
 		qt1 = mock( QualifiedTicket.class );
 		when( qt1.visit( dnv ) ).thenReturn( dnv.accept( qt1 ) );
@@ -1056,7 +1055,6 @@ public class ReferenceTest {
 			.thenReturn( qt2 );
 
 		s = dnv.accept( r );
-		System.out.println( s );
 	}
 
 }

@@ -137,6 +137,8 @@ public class MapTest {
 		m2 = new Map( key2, value2 );
 		
 		m3 = m1.merge( m2 );
+		assertNotSame( m1, m3 );
+		assertNotSame( m2, m3 );
 		assertEquals( 2, m3.size() );
 		assertEquals( value1, m3.get( key1 ) );
 		assertEquals( value2, m3.get( key2 ) );
@@ -157,6 +159,8 @@ public class MapTest {
 		m2 = new Map( key, value2 );
 		
 		m3 = m1.merge( m2 );
+		assertNotSame( m1, m3 );
+		assertNotSame( m2, m3 );
 		assertEquals( 1, m3.size() );
 		assertEquals( value2, m3.get( key ) );
 	}
@@ -199,6 +203,8 @@ public class MapTest {
 		assertEquals( 1, tm1.size() );
 		
 		tm2 = tm1.put( mock( Term.class ),  mock( Term.class ) );
+		
+		assertNotSame( tm1, tm2 );
 		assertEquals( 1, tm1.size() );
 		assertEquals( 2, tm2.size() );
 	}
@@ -219,6 +225,8 @@ public class MapTest {
 		assertTrue( m1.isEmpty() );
 		
 		m2 = m1.put( key, value );
+		
+		assertNotSame( m1, m2 );
 		assertTrue( m1.isEmpty() );
 		assertEquals( 1, m2.size() );
 		assertEquals( value, m2.get( key ) );
