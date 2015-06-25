@@ -72,7 +72,7 @@ public abstract class BaseRepl {
 	public static final int CTL_TICKETSET = 8;
 
 	public static final String LABEL_VERSION = "2.0.1-SNAPSHOT";
-	public static final String LABEL_BUILD = "2015-06-03";
+	public static final String LABEL_BUILD = "2015-06-22";
 
 	private final CfSemanticModelVisitor state;
 	private final Map<UUID,DynamicNodeVisitor> runningMap;
@@ -225,7 +225,10 @@ public abstract class BaseRepl {
 			s += " Error channel: \""+stdErr.replace( '\n', ' ' )+"\""; */
 		
 		if( log.isErrorEnabled() )
-			log.error( "Query "+queryId+" failed while executing ticket "+ticketId+"."+s );
+			if( ticketId == null )
+				log.error( "Query "+queryId+" failed."+s );
+			else
+				log.error( "Query "+queryId+" failed while executing ticket "+ticketId+"."+s );
 		
 		queryFailedPost( queryId, ticketId, e, script, stdOut, stdErr );
 	}
@@ -261,7 +264,9 @@ public abstract class BaseRepl {
 	
 	public abstract void queryStartedPost( UUID runId );
 	
-	public void ticketFinished( UUID queryId, long ticketId, Set<JsonReportEntry> reportEntrySet ) {
+	public synchronized void ticketFinished( UUID queryId, long ticketId, Set<JsonReportEntry> reportEntrySet ) {
+		
+		DynamicNodeVisitor dnv;
 		
 		if( queryId == null )
 			throw new NullPointerException( "Query ID must not be null." );
@@ -269,7 +274,14 @@ public abstract class BaseRepl {
 		if( reportEntrySet == null )
 			throw new NullPointerException( "Report entry set must not be null." );
 		
-		runningMap.get( queryId ).step();
+		dnv = runningMap.get( queryId );
+		if( dnv == null )
+			throw new NullPointerException( "Dynamic node visitor must not be null." );
+		
+		if( log.isDebugEnabled() )
+			log.debug( "Stepping expression in query "+queryId+"." );
+		
+		dnv.step();
 		
 		if( log.isDebugEnabled() )
 			log.debug( "Ticket finished: "+ticketId+" part of query "+queryId );
@@ -380,51 +392,46 @@ public abstract class BaseRepl {
 		ctl = 0;
 		removeCandidateList = new ArrayList<>();
 		
-		try {
-		
-			for( CompoundExpr ce : tlc.getTargetList() ) {
-				
-				cp = ce.clone();
-				
-				for( SingleExpr se : cp.getSingleExprList() )
-					if( se instanceof NameExpr ) {
-						
-						
-						if( ( ( NameExpr )se ).getId().equals( "state" ) ) {
-							ctl += CTL_STATE;
-							ce.remove( se );
-							removeCandidateList.add( ce );
-							continue;
-						}
 	
-						if( ( ( NameExpr )se ).getId().equals( "quit" ) ) {
-							ctl += CTL_QUIT;
-							ce.remove( se );
-							removeCandidateList.add( ce );
-							continue;
-						}
-	
-						if( ( ( NameExpr )se ).getId().equals( "queries" ) ) {
-							ctl += CTL_QUERYSET;
-							ce.remove( se );
-							removeCandidateList.add( ce );
-							continue;
-						}
-						
-						if( ( ( NameExpr )se ).getId().equals( "tickets" ) ) {
-							ctl += CTL_TICKETSET;
-							ce.remove( se );
-							removeCandidateList.add( ce );
-							continue;
-						}
+		for( CompoundExpr ce : tlc.getTargetList() ) {
+			
+			cp = new CompoundExpr( ce );
+			
+			for( SingleExpr se : cp.getSingleExprList() )
+				if( se instanceof NameExpr ) {
+					
+					
+					if( ( ( NameExpr )se ).getId().equals( "state" ) ) {
+						ctl += CTL_STATE;
+						ce.remove( se );
+						removeCandidateList.add( ce );
+						continue;
 					}
-			}
+
+					if( ( ( NameExpr )se ).getId().equals( "quit" ) ) {
+						ctl += CTL_QUIT;
+						ce.remove( se );
+						removeCandidateList.add( ce );
+						continue;
+					}
+
+					if( ( ( NameExpr )se ).getId().equals( "queries" ) ) {
+						ctl += CTL_QUERYSET;
+						ce.remove( se );
+						removeCandidateList.add( ce );
+						continue;
+					}
+					
+					if( ( ( NameExpr )se ).getId().equals( "tickets" ) ) {
+						ctl += CTL_TICKETSET;
+						ce.remove( se );
+						removeCandidateList.add( ce );
+						continue;
+					}
+				}
 		}
-		catch( CloneNotSupportedException e ) {
-			throw new RuntimeException( e );
-		}
-		
-		
+
+	
 		for( CompoundExpr ce : removeCandidateList )
 			if( ce.getNumSingleExpr() == 0 )
 				tlc.removeTarget( ce );
