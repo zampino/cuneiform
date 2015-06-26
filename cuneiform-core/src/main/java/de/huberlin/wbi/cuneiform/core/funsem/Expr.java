@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 public interface Expr {
 
-	public Stream<Expr> step(Map<String, Expr[]> rho,
+	public Stream<Expr> visit(Map<String, Expr[]> rho,
 			Map<String, Expr[]> global, Supplier<Ticket> createTicket,
-			Map<RefChannel, Expr[]> fin);
+			Map<RefChannel, Expr[]> fin, Sem sem );
 }

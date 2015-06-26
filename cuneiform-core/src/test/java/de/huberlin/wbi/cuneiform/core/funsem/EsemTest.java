@@ -21,7 +21,7 @@ public class EsemTest {
 	@Before
 	public void setup() {
 		
-		esem = new Csem();
+		esem = new DefaultCsem();
 		rho = new HashMap<>();
 		global = new HashMap<>();
 		fin = new HashMap<>();
