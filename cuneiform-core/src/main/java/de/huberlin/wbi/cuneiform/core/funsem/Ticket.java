@@ -1,5 +1,10 @@
 package de.huberlin.wbi.cuneiform.core.funsem;
 
-public interface Ticket {
+import java.util.UUID;
 
+public class Ticket {
+
+	public Ticket( UUID ref ) {
+		
+	}
 }
