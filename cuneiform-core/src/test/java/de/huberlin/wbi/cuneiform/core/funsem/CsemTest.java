@@ -13,11 +13,16 @@ import org.junit.Test;
 public class CsemTest {
 	
 	private static final Supplier<Ticket> CREATE_TICKET = () -> new Ticket( randomUUID() );
+	private static final Location LOC = new Location();
 
 	private DefaultSem csem;
 	private Map<RefChannel,Expr[]> fin;
 	private Map<String,Expr[]> global;
 
+	/*
+	 * SETUP AND TEAR DOWN
+	 */
+	
 	@Before
 	public void setup() {
 		
@@ -26,6 +31,11 @@ public class CsemTest {
 		csem = new Csem( global, CREATE_TICKET, fin );
 	}
 	
+	
+	/*
+	 * STANDARD JAVA RELATED TESTS
+	 */
+	
 	@SuppressWarnings("static-method")
 	@Test
 	public void constructorShouldSetAndGetGlobalCreateTicketAndFin() {
@@ -33,17 +43,20 @@ public class CsemTest {
 		DefaultSem defaultSem;
 		HashMap<String,Expr[]> g;
 		HashMap<RefChannel,Expr[]> f;
-		Supplier<Ticket> createTicket;
 		
 		g = new HashMap<>();
 		f = new HashMap<>();
-		createTicket = () -> new Ticket( randomUUID() );
 		
-		defaultSem = new Csem( g, createTicket, f );
+		defaultSem = new Csem( g, CREATE_TICKET, f );
 		assertSame( g, defaultSem.getGlobal() );
-		assertSame( createTicket, defaultSem.getCreateTicket() );
+		assertSame( CREATE_TICKET, defaultSem.getCreateTicket() );
 		assertSame( f, defaultSem.getFin() );
 	}
+	
+	
+	/*
+	 * REFERENCE TESTS
+	 */
 
 	@Test
 	public void nilShouldEvalItself() {
@@ -71,5 +84,17 @@ public class CsemTest {
 		x = csem.eval( a, rho );
 		
 		assertArrayEquals( a, x );
+	}
+	
+	@Test( expected=CfRuntimeException.class )
+	public void undefVarShouldFail() {
+		
+		Expr[] e;
+		Map<String,Expr[]> rho;
+		
+		e = new Expr[] { new VarExpr( LOC, "x" ) };
+		rho = new HashMap<>();
+		
+		csem.eval( e,  rho );
 	}
 }

@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 public abstract class DefaultSem implements Sem {
 
-	private static Expr[] toExprVec(Stream<Expr> stream) {
+	public static Expr[] toExprVec(Stream<Expr> stream) {
 
 		Object[] resultObj;
 		Expr[] resultExpr;
@@ -21,10 +21,10 @@ public abstract class DefaultSem implements Sem {
 
 		return resultExpr;
 	}
-	
-	private final Map<String,Expr[]> global;
+
+	private final Map<String, Expr[]> global;
 	private final Supplier<Ticket> createTicket;
-	private final Map<RefChannel,Expr[]> fin;
+	private final Map<RefChannel, Expr[]> fin;
 
 	public DefaultSem(Map<String, Expr[]> global,
 			Supplier<Ticket> createTicket, Map<RefChannel, Expr[]> fin) {
@@ -39,33 +39,16 @@ public abstract class DefaultSem implements Sem {
 		return Stream.of(strExpr);
 	}
 
-	@Override
-	public Expr[] eval(Expr[] compoundExpr, Map<String, Expr[]> rho) {
-
-		Stream<Expr> stream, result;
-
-		stream = Stream.of(compoundExpr);
-
-		result = stream.flatMap((Expr e) -> evalSingle(e, rho));
-
-		return toExprVec(result);
-
-	}
-
-	private Stream<Expr> evalSingle(Expr expr, Map<String, Expr[]> rho) {
-		return expr.visit(rho, this);
-	}
-
-	public Map<String,Expr[]> getGlobal() {
-		return global;
-	}
-
 	public Supplier<Ticket> getCreateTicket() {
 		return createTicket;
 	}
 
-	public Map<RefChannel,Expr[]> getFin() {
+	public Map<RefChannel, Expr[]> getFin() {
 		return fin;
+	}
+
+	public Map<String, Expr[]> getGlobal() {
+		return global;
 	}
 
 }
