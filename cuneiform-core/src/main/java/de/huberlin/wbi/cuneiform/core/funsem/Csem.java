@@ -1,5 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.funsem;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -8,25 +9,47 @@ public class Csem extends DefaultSem {
 
 	public Csem(Map<String, Expr[]> global, Supplier<Ticket> createTicket,
 			Map<RefChannel, Expr[]> fin) {
-		super(global, createTicket, fin);
+		super( global, createTicket, fin );
 	}
 
 	@Override
-	public Expr[] eval(Expr[] compoundExpr, Map<String, Expr[]> rho) {
+	public Expr[] eval( Expr[] compoundExpr, Map<String, Expr[]> rho ) {
 
-		Stream<Expr> stream, result;
+		Stream<Expr> stream;
+		Expr[] result;
 
-		stream = Stream.of(compoundExpr);
+		stream = Stream.of( compoundExpr );
 
-		result = stream.flatMap((Expr e) -> evalSingle(e, rho));
+		result = toExprVec( stream.flatMap( ( Expr e ) -> Stream
+				.of( stepSingle( e, rho ) ) ) );
 
-		return toExprVec(result);
+		if( Arrays.deepEquals( compoundExpr, result ) )
+			return result;
 
+		return eval( result, rho );
 	}
 
-	private Stream<Expr> evalSingle(Expr expr, Map<String, Expr[]> rho) {
-		return expr.visit(rho, this);
+	private Expr[] stepSingle( Expr expr, Map<String, Expr[]> rho ) {
+		return expr.visit( rho, this );
 	}
 
+	@Override
+	public Expr[] accept( VarExpr varExpr, Map<String, Expr[]> rho ) {
+
+		String name;
+		Map<String, Expr[]> global;
+
+		name = varExpr.getName();
+		global = getGlobal();
+
+		if( global.containsKey( name ) )
+			return global.get( name );
+
+		if( !rho.containsKey( name ) )
+			throw new CfRuntimeException( varExpr.getLoc(), "The variable "
+					+ name + " is unbound." );
+
+		return rho.get( name );
+	}
 
 }

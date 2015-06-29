@@ -9,8 +9,8 @@ public class StrExpr implements Expr {
 	}
 
 	@Override
-	public Stream<Expr> visit(Map<String, Expr[]> rho, Sem sem) {
-		return sem.accept(this, rho);
+	public Expr[] visit( Map<String, Expr[]> rho, Sem sem ) {
+		return sem.accept( this, rho );
 	}
 
 }

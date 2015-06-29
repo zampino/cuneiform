@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 public abstract class DefaultSem implements Sem {
 
-	public static Expr[] toExprVec(Stream<Expr> stream) {
+	public static Expr[] toExprVec( Stream<Expr> stream ) {
 
 		Object[] resultObj;
 		Expr[] resultExpr;
@@ -17,7 +17,7 @@ public abstract class DefaultSem implements Sem {
 		n = resultObj.length;
 		resultExpr = new Expr[n];
 
-		System.arraycopy(resultObj, 0, resultExpr, 0, n);
+		System.arraycopy( resultObj, 0, resultExpr, 0, n );
 
 		return resultExpr;
 	}
@@ -35,8 +35,8 @@ public abstract class DefaultSem implements Sem {
 	}
 
 	@Override
-	public Stream<Expr> accept(StrExpr strExpr, Map<String, Expr[]> rho) {
-		return Stream.of(strExpr);
+	public Expr[] accept( StrExpr strExpr, Map<String, Expr[]> rho ) {
+		return new Expr[] { strExpr };
 	}
 
 	public Supplier<Ticket> getCreateTicket() {
@@ -50,5 +50,4 @@ public abstract class DefaultSem implements Sem {
 	public Map<String, Expr[]> getGlobal() {
 		return global;
 	}
-
 }
