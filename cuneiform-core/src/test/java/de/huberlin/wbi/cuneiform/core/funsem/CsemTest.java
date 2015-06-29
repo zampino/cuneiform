@@ -168,6 +168,26 @@ public class CsemTest {
 		assertArrayEquals( a, x );
 	}
 
+	/*unfinished_ticket_should_eval_to_itself( {Eval, CreateTicket} ) ->
+	  Ticket = apply( CreateTicket, [] ),
+	  E = [{select, ?LOC, 1, Ticket}],
+	  X = apply( Eval, [E, #{}, CreateTicket, #{}] ),
+	  ?_assertEqual( E, X ).*/
+	
+	@Test
+	public void unfinishedTicketShouldEvalToItself() {
+		
+		Ticket ticket;
+		Expr[] e, x;
+		
+		ticket = CREATE_TICKET.get();
+		
+		e = new Expr[] { new SelectExpr( loc, 1, ticket ) };
+		x = csem.eval( e, rho );
+		
+		assertArrayEquals( e, x );
+	}
+	  
 
 	 
 }

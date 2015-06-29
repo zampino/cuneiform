@@ -38,6 +38,11 @@ public abstract class DefaultSem implements Sem {
 	public Expr[] accept( StrExpr strExpr, Map<String, Expr[]> rho ) {
 		return new Expr[] { strExpr };
 	}
+	
+	@Override
+	public Expr[] accept( SelectExpr selectExpr, Map<String, Expr[]> rho ) {
+		return new Expr[] { selectExpr };
+	}
 
 	public Supplier<Ticket> getCreateTicket() {
 		return createTicket;

@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface Expr {
 
-	public Expr[] visit(Map<String, Expr[]> rho, Sem sem);
+	public Expr[] visit(Sem sem, Map<String, Expr[]> rho );
 }

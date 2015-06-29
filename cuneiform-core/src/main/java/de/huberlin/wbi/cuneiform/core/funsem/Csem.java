@@ -30,7 +30,7 @@ public class Csem extends DefaultSem {
 	}
 
 	private Expr[] stepSingle( Expr expr, Map<String, Expr[]> rho ) {
-		return expr.visit( rho, this );
+		return expr.visit( this, rho );
 	}
 
 	@Override
@@ -51,5 +51,4 @@ public class Csem extends DefaultSem {
 
 		return rho.get( name );
 	}
-
 }

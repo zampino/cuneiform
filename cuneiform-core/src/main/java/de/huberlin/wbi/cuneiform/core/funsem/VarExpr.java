@@ -14,7 +14,7 @@ public class VarExpr implements Expr {
 	}
 
 	@Override
-	public Expr[] visit( Map<String, Expr[]> rho, Sem sem ) {
+	public Expr[] visit( Sem sem, Map<String, Expr[]> rho ) {
 		return sem.accept( this, rho );
 	}
 
