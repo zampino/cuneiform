@@ -24,10 +24,10 @@ public abstract class DefaultSem implements Sem {
 
 	private final Map<String, Expr[]> global;
 	private final Supplier<Ticket> createTicket;
-	private final Map<RefChannel, Expr[]> fin;
+	private final Map<ChannelRef, Expr[]> fin;
 
 	public DefaultSem(Map<String, Expr[]> global,
-			Supplier<Ticket> createTicket, Map<RefChannel, Expr[]> fin) {
+			Supplier<Ticket> createTicket, Map<ChannelRef, Expr[]> fin) {
 
 		this.global = global;
 		this.createTicket = createTicket;
@@ -41,6 +41,14 @@ public abstract class DefaultSem implements Sem {
 	
 	@Override
 	public Expr[] accept( SelectExpr selectExpr, Map<String, Expr[]> rho ) {
+		
+		ChannelRef channelRef;
+		
+		channelRef = new ChannelRef( selectExpr.getChannel(), selectExpr.getRef() );
+		
+		if( fin.containsKey( channelRef ) )
+			return fin.get( channelRef );
+		
 		return new Expr[] { selectExpr };
 	}
 
@@ -48,7 +56,7 @@ public abstract class DefaultSem implements Sem {
 		return createTicket;
 	}
 
-	public Map<RefChannel, Expr[]> getFin() {
+	public Map<ChannelRef, Expr[]> getFin() {
 		return fin;
 	}
 

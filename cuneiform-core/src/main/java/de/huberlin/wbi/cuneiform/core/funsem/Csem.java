@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 public class Csem extends DefaultSem {
 
 	public Csem(Map<String, Expr[]> global, Supplier<Ticket> createTicket,
-			Map<RefChannel, Expr[]> fin) {
+			Map<ChannelRef, Expr[]> fin) {
 		super( global, createTicket, fin );
 	}
 
