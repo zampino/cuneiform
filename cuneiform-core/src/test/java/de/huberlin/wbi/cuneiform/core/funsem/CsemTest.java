@@ -217,11 +217,11 @@ public class CsemTest {
 	 @Test
 	 public void identityFnShouldEvalArg() {
 		 
-		 Expr[] e, f;
+		 Expr[] e, f, x;
 		 Sign sign;
 		 NatBody body;
 		 Expr[] lam;
-		 ImmutableMap bodyMap;
+		 ImmutableMap bodyMap, bindingMap;
 		  
 		 e = new Expr[] { new StrExpr( "bla" ) };
 		 sign = new Sign(
@@ -229,13 +229,15 @@ public class CsemTest {
 				 new Param[] {},
 				 new Param[] { new Param( "inp", false, false ) } );
 		 
-		 bodyMap = new ImmutableMap();
-		 bodyMap = bodyMap.put( "out", new VarExpr( LOC, "inp" ) );
-		 
+		 bodyMap = new ImmutableMap( "out", new Expr[] { new VarExpr( LOC, "inp" ) } );
 		 body = new NatBody( Lang.BASH, bodyMap );
-		 
 		 lam = new Expr[] { new LamExpr( LOC, sign, body ) };
 		 
-		 f = new Expr[] { new AppExpr( LOC, 1, lam, ) };
+		 bindingMap = new ImmutableMap( "inp", e );
+		 f = new Expr[] { new AppExpr( LOC, 1, lam, bindingMap ) };
+		 
+		 x = csem.eval( f, rho );
+		 
+		 assertArrayEquals( e, x );
 	 }
 }
