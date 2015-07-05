@@ -169,11 +169,6 @@ public class CsemTest {
 		assertArrayEquals( a, x );
 	}
 
-	/*unfinished_ticket_should_eval_to_itself( {Eval, CreateTicket} ) ->
-	  Ticket = apply( CreateTicket, [] ),
-	  E = [{select, ?LOC, 1, Ticket}],
-	  X = apply( Eval, [E, #{}, CreateTicket, #{}] ),
-	  ?_assertEqual( E, X ).*/
 	
 	@Test
 	public void unfinishedTicketShouldEvalToItself() {
@@ -189,13 +184,6 @@ public class CsemTest {
 		assertArrayEquals( e, x );
 	}
 	  
-	/*finished_ticket_should_eval_to_value( {Eval, CreateTicket} ) ->
-  Ticket = apply( CreateTicket, [] ),
-  {ticket, Ref} = Ticket,
-  E = [{select, ?LOC, 1, Ticket}],
-  F = [{str, "blub"}],
-  X = apply( Eval, [E, #{}, CreateTicket, put( {1, Ref}, F, #{} )] ),
-  ?_assertEqual( F, X ).*/
 
 	 @Test
 	 public void finishedTicketShouldEvalToValue() {
@@ -215,5 +203,39 @@ public class CsemTest {
 		 x = csem.eval( e, rho );
 		 
 		 assertArrayEquals( f, x );
+	 }
+	 
+	 /* identity_fn_should_eval_arg( {Eval, CreateTicket} ) ->
+  E = [{str, "bla"}],
+  Sign = {sign, [{param, "out", false, false}],
+                [], [{param, "inp", false, false}]},
+  Body = {natbody, #{"out" => [{var, ?LOC, "inp"}]}},
+  LamList = [{lam, ?LOC, Sign, Body}],
+  F = [{app, ?LOC, 1, LamList, #{"inp" => E}}],
+  ?_assertEqual( E, apply( Eval, [F, #{}, CreateTicket, #{}] ) ). */
+	 
+	 @Test
+	 public void identityFnShouldEvalArg() {
+		 
+		 Expr[] e, f;
+		 Sign sign;
+		 NatBody body;
+		 Expr[] lam;
+		 ImmutableMap bodyMap;
+		  
+		 e = new Expr[] { new StrExpr( "bla" ) };
+		 sign = new Sign(
+				 new Param[] { new Param( "out", false, false ) },
+				 new Param[] {},
+				 new Param[] { new Param( "inp", false, false ) } );
+		 
+		 bodyMap = new ImmutableMap();
+		 bodyMap = bodyMap.put( "out", new VarExpr( LOC, "inp" ) );
+		 
+		 body = new NatBody( Lang.BASH, bodyMap );
+		 
+		 lam = new Expr[] { new LamExpr( LOC, sign, body ) };
+		 
+		 f = new Expr[] { new AppExpr( LOC, 1, lam, ) };
 	 }
 }
