@@ -3,11 +3,11 @@ package de.huberlin.wbi.cuneiform.core.funsem;
 import java.util.HashMap;
 import java.util.Set;
 
-public class ImmutableMap<K,V> {
+public class Amap<K,V> {
 
 	private final HashMap<K,V> content;
 	
-	public ImmutableMap( K key, V value ) {
+	public Amap( K key, V value ) {
 		this();
 		
 		if( key == null )
@@ -19,15 +19,15 @@ public class ImmutableMap<K,V> {
 		content.put( key, value );
 	}
 	
-	public ImmutableMap() {
+	public Amap() {
 		content = new HashMap<>();
 	}
 	
-	private ImmutableMap( HashMap<K,V> content ) {
+	private Amap( HashMap<K,V> content ) {
 		this.content = content;
 	}
 	
-	public ImmutableMap<K,V> put( K key, V value ) {
+	public Amap<K,V> put( K key, V value ) {
 		
 		HashMap<K,V> newContent;
 		
@@ -41,7 +41,7 @@ public class ImmutableMap<K,V> {
 		newContent.putAll( content );
 		newContent.put( key, value );
 		
-		return new ImmutableMap<>( newContent );
+		return new Amap<>( newContent );
 	}
 	
 	public V get( K key ) {
@@ -73,7 +73,7 @@ public class ImmutableMap<K,V> {
 		return def;
 	}
 	
-	public ImmutableMap<K,V> merge( ImmutableMap<K,V> tm2 ) {
+	public Amap<K,V> merge( Amap<K,V> tm2 ) {
 		
 		HashMap<K,V> newContent;
 		
@@ -84,7 +84,7 @@ public class ImmutableMap<K,V> {
 		newContent.putAll( content );
 		newContent.putAll( tm2.content );
 		
-		return new ImmutableMap<>( newContent );		
+		return new Amap<>( newContent );		
 	}
 	
 	public int size() {

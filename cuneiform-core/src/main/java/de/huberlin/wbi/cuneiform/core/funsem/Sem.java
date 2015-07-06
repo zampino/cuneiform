@@ -3,15 +3,15 @@ package de.huberlin.wbi.cuneiform.core.funsem;
 
 public interface Sem {
 
-	public Expr[] eval( Expr[] compoundExpr, ImmutableMap<String, Expr[]> rho );
+	public Alist<Expr> eval( Alist<Expr> compoundExpr, Amap<String, Alist<Expr>> rho );
 
-	public Expr[] accept( StrExpr strExpr, ImmutableMap<String, Expr[]> rho );
+	public Alist<Expr> accept( StrExpr strExpr, Amap<String, Alist<Expr>> rho );
 
-	public Expr[] accept( VarExpr varExpr, ImmutableMap<String, Expr[]> rho );
+	public Alist<Expr> accept( VarExpr varExpr, Amap<String, Alist<Expr>> rho );
 
-	public Expr[] accept( SelectExpr selectExpr, ImmutableMap<String, Expr[]> rho );
+	public Alist<Expr> accept( SelectExpr selectExpr, Amap<String, Alist<Expr>> rho );
 
-	public Expr[] accept(AppExpr appExpr, ImmutableMap<String, Expr[]> rho);
+	public Alist<Expr> accept(AppExpr appExpr, Amap<String, Alist<Expr>> rho);
 
-	public Expr[] accept(LamExpr lamExpr, ImmutableMap<String, Expr[]> rho);
+	public Alist<Expr> accept(LamExpr lamExpr, Amap<String, Alist<Expr>> rho);
 }

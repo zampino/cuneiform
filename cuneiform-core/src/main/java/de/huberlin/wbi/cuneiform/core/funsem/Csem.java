@@ -1,9 +1,6 @@
 package de.huberlin.wbi.cuneiform.core.funsem;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import static de.huberlin.wbi.cuneiform.core.funsem.Enumerator.*;
 
@@ -14,35 +11,37 @@ public class Csem extends DefaultSem {
 	}
 
 	@Override
-	public Expr[] accept( AppExpr appExpr, ImmutableMap<String, Expr[]> rho ) {
-		
-		Expr[] lam;
+	public Alist<Expr> accept( AppExpr appExpr, Amap<String, Alist<Expr>> rho ) {
+
+		Alist<Expr> lam;
 		Sign sign;
-		List<ImmutableMap<String,Expr[]>> enumList;
-		ImmutableMap<String,Expr[]> bindingMap;
-		
+		Alist<Amap<String, Alist<Expr>>> enumList;
+		Amap<String, Alist<Expr>> bindingMap;
+
 		lam = appExpr.getLam();
 		bindingMap = appExpr.getBindingMap();
-		
-		if( lam.length == 0 )
-			return new Expr[] {};
-		
-		sign = ( ( LamExpr )lam[ 0 ] ).getSign();
-		
+
+		if( lam.isEmpty() )
+			return new Alist<>();
+
+		sign = ( ( LamExpr )lam.hd() ).getSign();
+
 		enumList = enumerate( sign, bindingMap );
-		
-        /* EnumList = enum( Sign, BindingMap ),
-        flatten( [step_app( AppLoc, Channel, L, E, CreateTicket, Override ) || L <- LamList, E <- EnumList] ); */
-		
-		
+
+		/*
+		 * EnumList = enum( Sign, BindingMap ), flatten( [step_app( AppLoc,
+		 * Channel, L, E, CreateTicket, Override ) || L <- LamList, E <-
+		 * EnumList] );
+		 */
+
 		return null;
 	}
 
 	@Override
-	public Expr[] accept( VarExpr varExpr, ImmutableMap<String, Expr[]> rho ) {
+	public Alist<Expr> accept( VarExpr varExpr, Amap<String, Alist<Expr>> rho ) {
 
 		String name;
-		ImmutableMap<String, Expr[]> global;
+		Amap<String, Alist<Expr>> global;
 
 		name = varExpr.getName();
 		global = getGlobal();
@@ -58,23 +57,20 @@ public class Csem extends DefaultSem {
 	}
 
 	@Override
-	public Expr[] eval( Expr[] compoundExpr, ImmutableMap<String, Expr[]> rho ) {
+	public Alist<Expr> eval( Alist<Expr> compoundExpr,
+			Amap<String, Alist<Expr>> rho ) {
 
-		Stream<Expr> stream;
-		Expr[] result;
+		Alist<Expr> result;
 
-		stream = Stream.of( compoundExpr );
+		result = compoundExpr.flatMap( ( Expr e ) -> stepSingle( e, rho ) );
 
-		result = toExprVec( stream.flatMap( ( Expr e ) -> Stream
-				.of( stepSingle( e, rho ) ) ) );
-
-		if( Arrays.deepEquals( compoundExpr, result ) )
+		if( compoundExpr.equals( result ) )
 			return result;
 
 		return eval( result, rho );
 	}
 
-	private Expr[] stepSingle( Expr expr, ImmutableMap<String, Expr[]> rho ) {
+	private Alist<Expr> stepSingle( Expr expr, Amap<String, Alist<Expr>> rho ) {
 		return expr.visit( this, rho );
 	}
 }

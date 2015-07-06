@@ -13,7 +13,7 @@ public class SelectExpr implements Expr {
 	}
 
 	@Override
-	public Expr[] visit( Sem sem, ImmutableMap<String, Expr[]> rho ) {
+	public Alist<Expr> visit( Sem sem, Amap<String, Alist<Expr>> rho ) {
 		return sem.accept(  this, rho );
 	}
 

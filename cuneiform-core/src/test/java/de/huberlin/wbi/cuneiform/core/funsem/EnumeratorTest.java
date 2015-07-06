@@ -1,7 +1,5 @@
 package de.huberlin.wbi.cuneiform.core.funsem;
 
-import java.util.List;
-
 import org.junit.Test;
 
 import static de.huberlin.wbi.cuneiform.core.funsem.Enumerator.*;
@@ -28,8 +26,8 @@ public class EnumeratorTest implements DefaultTest {
 	public void enumerateReturnsSingleEmptyBlockForEmptyInputParameterVec() {
 
 		Sign sign;
-		List<ImmutableMap<String, Expr[]>> result;
-		ImmutableMap<String, Expr[]> map;
+		Alist<Amap<String, Alist<Expr>>> result;
+		Amap<String, Alist<Expr>> map;
 
 		sign = new Sign( new Param[] { new Param( "out", false, false ) },
 				new Param[] {}, new Param[] {} );
@@ -37,7 +35,7 @@ public class EnumeratorTest implements DefaultTest {
 		result = enumerate( sign, EMPTY_MAP );
 		assertEquals( 1, result.size() );
 
-		map = result.get( 0 );
+		map = result.hd();
 		assertEquals( 0, map.size() );
 	}
 
@@ -46,36 +44,50 @@ public class EnumeratorTest implements DefaultTest {
 	public void enumerateEnumeratesSingleInputParam() {
 
 		Sign sign;
-		List<ImmutableMap<String, Expr[]>> result;
-		ImmutableMap<String, Expr[]> bindingMap, map;
+		Alist<Amap<String, Alist<Expr>>> result;
+		Amap<String, Alist<Expr>> bindingMap, map;
+		Alist<Expr> e, x;
 
 		sign = new Sign( new Param[] { new Param( "out", false, false ) },
 				new Param[] {}, new Param[] { new Param( "p", false, false ) } );
 
-		bindingMap = EMPTY_MAP.put( "p", new Expr[] { new StrExpr( "a" ),
-				new StrExpr( "b" ), new StrExpr( "c" ), new StrExpr( "d" ) } );
+		e = new Alist<>();
+		e = e.add( new StrExpr( "d" ) ).add( new StrExpr( "c" ) ).add( new StrExpr( "b" ) ).add( new StrExpr( "a" ) );
+		
+		bindingMap = EMPTY_MAP.put( "p", e );
 
 		result = enumerate( sign, bindingMap );
 		assertEquals( 4, result.size() );
 
-		map = result.get( 0 );
+		map = result.hd();
 		assertEquals( 1, map.size() );
 		assertTrue( map.isKey( "p" ) );
-		assertArrayEquals( new Expr[] { new StrExpr( "a" ) }, map.get( "p" ) );
+		x = new Alist<>();
+		x = x.add( new StrExpr( "a" ) );
+		assertEquals( x, map.get( "p" ) );
+		
+		result = result.tl();
+		map = result.hd();
+		assertEquals( 1, map.size() );
+		assertTrue( map.isKey( "p" ) );
+		x = new Alist<>();
+		x = x.add( new StrExpr( "b" ) );
+		assertEquals( x, map.get( "p" ) );
 
-		map = result.get( 1 );
+		result = result.tl();
+		map = result.hd();
 		assertEquals( 1, map.size() );
 		assertTrue( map.isKey( "p" ) );
-		assertArrayEquals( new Expr[] { new StrExpr( "b" ) }, map.get( "p" ) );
+		x = new Alist<>();
+		x = x.add( new StrExpr( "c" ) );
+		assertEquals( x, map.get( "p" ) );
 
-		map = result.get( 2 );
+		result = result.tl();
+		map = result.hd();
 		assertEquals( 1, map.size() );
 		assertTrue( map.isKey( "p" ) );
-		assertArrayEquals( new Expr[] { new StrExpr( "c" ) }, map.get( "p" ) );
-
-		map = result.get( 3 );
-		assertEquals( 1, map.size() );
-		assertTrue( map.isKey( "p" ) );
-		assertArrayEquals( new Expr[] { new StrExpr( "d" ) }, map.get( "p" ) );
+		x = new Alist<>();
+		x = x.add( new StrExpr( "d" ) );
+		assertEquals( x, map.get( "p" ) );
 	}
 }

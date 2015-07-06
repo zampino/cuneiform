@@ -4,15 +4,15 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class ImmutableMapTest {
+public class AmapTest {
 
 	@SuppressWarnings("static-method")
 	@Test
 	public void constructorReturnsEmptyMap() {
 		
-		ImmutableMap<Integer,String> m;
+		Amap<Integer,String> m;
 		
-		m = new ImmutableMap<>();
+		m = new Amap<>();
 		assertTrue( m.isEmpty() );
 	}
 	
@@ -20,14 +20,14 @@ public class ImmutableMapTest {
 	@Test
 	public void constructorReturnsMapWithSingleEntry() {
 		
-		ImmutableMap<Integer,String> m;
+		Amap<Integer,String> m;
 		int key;
 		String value;
 		
 		key = 1;
 		value = "bla";
 		
-		m = new ImmutableMap<>( key, value );
+		m = new Amap<>( key, value );
 		assertEquals( 1, m.size() );
 		assertEquals( value, m.get( key ) );
 	}
@@ -35,22 +35,22 @@ public class ImmutableMapTest {
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
 	public void constructThrowsIaeOnNullKey() {
-		new ImmutableMap<Integer,String>( null, "bla" );
+		new Amap<Integer,String>( null, "bla" );
 	}
 	
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test( expected=IllegalArgumentException.class )
 	public void constructThrowsIaeOnNullValue() {
-		new ImmutableMap<Integer,String>( 2, null );
+		new Amap<Integer,String>( 2, null );
 	}
 	
 	@SuppressWarnings("static-method")
 	@Test( expected=IllegalArgumentException.class )
 	public void getNullShouldThrowIae() {
 		
-		ImmutableMap<Integer,String> m;
+		Amap<Integer,String> m;
 		
-		m = new ImmutableMap<>();
+		m = new Amap<>();
 		m.get( null );
 	}
 	
@@ -58,9 +58,9 @@ public class ImmutableMapTest {
 	@Test( expected=RuntimeException.class )
 	public void getUnboundKeyShouldThrowUve() {
 		
-		ImmutableMap<Integer,String> m;
+		Amap<Integer,String> m;
 		
-		m = new ImmutableMap<>();
+		m = new Amap<>();
 		m.get( 2 );
 	}
 	
@@ -68,10 +68,10 @@ public class ImmutableMapTest {
 	@Test
 	public void getUnboundKeyWithDefaultShouldReturnDefault() {
 		
-		ImmutableMap<Integer,String> m;
+		Amap<Integer,String> m;
 		String def;
 		
-		m = new ImmutableMap<>();
+		m = new Amap<>();
 		def = "blub";
 		
 		assertEquals( def, m.get( 5, def ) );
@@ -81,10 +81,10 @@ public class ImmutableMapTest {
 	@Test( expected=IllegalArgumentException.class )
 	public void getNullWithDefaultShouldThrowIae() {
 		
-		ImmutableMap<Integer,String> m;
+		Amap<Integer,String> m;
 		String def;
 		
-		m = new ImmutableMap<>();
+		m = new Amap<>();
 		def = "blub";
 		
 		m.get( null, def );
@@ -94,9 +94,9 @@ public class ImmutableMapTest {
 	@Test( expected=IllegalArgumentException.class )
 	public void getWithNullDefaultShouldThrowIae() {
 		
-		ImmutableMap<Integer,String> m;
+		Amap<Integer,String> m;
 		
-		m = new ImmutableMap<>();
+		m = new Amap<>();
 		m.get( 1, null );
 	}
 	
@@ -104,7 +104,7 @@ public class ImmutableMapTest {
 	@Test
 	public void mergeCombinesTwoMaps() {
 		
-		ImmutableMap<Integer,String> m1, m2, m3;
+		Amap<Integer,String> m1, m2, m3;
 		int key1, key2;
 		String value1, value2;
 		
@@ -113,8 +113,8 @@ public class ImmutableMapTest {
 		value1 = "bla";
 		value2 = "blub";
 		
-		m1 = new ImmutableMap<>( key1, value1 );
-		m2 = new ImmutableMap<>( key2, value2 );
+		m1 = new Amap<>( key1, value1 );
+		m2 = new Amap<>( key2, value2 );
 		
 		m3 = m1.merge( m2 );
 		assertEquals( 2, m3.size() );
@@ -126,7 +126,7 @@ public class ImmutableMapTest {
 	@Test
 	public void mergeSecondShouldSupersedeFirst() {
 		
-		ImmutableMap<Integer,String> m1, m2, m3;
+		Amap<Integer,String> m1, m2, m3;
 		int key;
 		String value1, value2;
 		
@@ -134,8 +134,8 @@ public class ImmutableMapTest {
 		value1 = "bla";
 		value2 = "blub";
 		
-		m1 = new ImmutableMap<>( key, value1 );
-		m2 = new ImmutableMap<>( key, value2 );
+		m1 = new Amap<>( key, value1 );
+		m2 = new Amap<>( key, value2 );
 		
 		m3 = m1.merge( m2 );
 		assertEquals( 1, m3.size() );
@@ -146,12 +146,12 @@ public class ImmutableMapTest {
 	@Test
 	public void mergeLeavesBothOriginalMapsUnchanged() {
 		
-		ImmutableMap<Integer,String> tm1, tm2, tm3;
+		Amap<Integer,String> tm1, tm2, tm3;
 		
-		tm1 = new ImmutableMap<>( 1, "bla" );
+		tm1 = new Amap<>( 1, "bla" );
 		assertEquals( 1, tm1.size() );
 		
-		tm2 = new ImmutableMap<>( 2, "blub" );
+		tm2 = new Amap<>( 2, "blub" );
 		assertEquals( 1, tm2.size() );
 		
 		tm3 = tm1.merge( tm2 );
@@ -164,9 +164,9 @@ public class ImmutableMapTest {
 	@Test( expected=IllegalArgumentException.class )
 	public void mergeWithNullShouldThrowIae() {
 		
-		ImmutableMap<Integer,String> tm;
+		Amap<Integer,String> tm;
 		
-		tm = new ImmutableMap<>();
+		tm = new Amap<>();
 		tm.merge( null );
 	}
 	
@@ -174,9 +174,9 @@ public class ImmutableMapTest {
 	@Test
 	public void putLeavesOriginalMapUnchanged() {
 		
-		ImmutableMap<Integer,String> tm1, tm2;
+		Amap<Integer,String> tm1, tm2;
 		
-		tm1 = new ImmutableMap<>( 1, "bla" );
+		tm1 = new Amap<>( 1, "bla" );
 		assertEquals( 1, tm1.size() );
 		
 		tm2 = tm1.put( 2, "blub" );
@@ -188,7 +188,7 @@ public class ImmutableMapTest {
 	@Test
 	public void putReturnsNewMapWithNewEntry() {
 		
-		ImmutableMap<Integer,String> m1, m2;
+		Amap<Integer,String> m1, m2;
 		int key;
 		String value;
 		
@@ -196,7 +196,7 @@ public class ImmutableMapTest {
 		value = "bla";
 		
 		
-		m1 = new ImmutableMap<>();
+		m1 = new Amap<>();
 		assertTrue( m1.isEmpty() );
 		
 		m2 = m1.put( key, value );
@@ -209,9 +209,9 @@ public class ImmutableMapTest {
 	@Test( expected=IllegalArgumentException.class )
 	public void putThrowsIaeOnNullKey() {
 		
-		ImmutableMap<Integer,String> tm;
+		Amap<Integer,String> tm;
 		
-		tm = new ImmutableMap<>();
+		tm = new Amap<>();
 		tm.put( null, "blub" );
 	}
 	
@@ -219,9 +219,9 @@ public class ImmutableMapTest {
 	@Test( expected=IllegalArgumentException.class )
 	public void putThrowsIaeOnNullValue() {
 		
-		ImmutableMap<Integer,String> tm;
+		Amap<Integer,String> tm;
 		
-		tm = new ImmutableMap<>();
+		tm = new Amap<>();
 		tm.put( 2, null );
 	}
 	
@@ -233,12 +233,12 @@ public class ImmutableMapTest {
 	@Test
 	public void hasKeyReturnsTrueOnExistingKey() {
 		
-		ImmutableMap<Integer,String> tm;
+		Amap<Integer,String> tm;
 		int key;
 		
 		key = 2;
 		
-		tm = new ImmutableMap<>( key, "blub" );
+		tm = new Amap<>( key, "blub" );
 		assertTrue( tm.isKey( key ) );
 	}
 	
@@ -246,8 +246,8 @@ public class ImmutableMapTest {
 	@Test
 	public void hasKeyReturnsFalseOnNonExistingKey() {
 		
-		ImmutableMap<Integer,String> tm;
-		tm = new ImmutableMap<>( 4, "bla" );
+		Amap<Integer,String> tm;
+		tm = new Amap<>( 4, "bla" );
 		assertFalse( tm.isKey( 3 ) );
 	}
 	

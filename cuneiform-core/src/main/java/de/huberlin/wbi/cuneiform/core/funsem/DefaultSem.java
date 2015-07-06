@@ -10,52 +10,40 @@ public abstract class DefaultSem implements Sem {
 
 	private static final int MAX_CHANNEL = 16;
 
-
-
-	public static Expr[] toExprVec( Stream<Expr> stream ) {
-
-		Object[] resultObj;
-		Expr[] resultExpr;
-		int n;
-
-		resultObj = stream.toArray();
-
-		n = resultObj.length;
-		resultExpr = new Expr[ n ];
-
-		System.arraycopy( resultObj, 0, resultExpr, 0, n );
-
-		return resultExpr;
-	}
-
-	private ImmutableMap<String, Expr[]> global;
+	private Amap<String, Alist<Expr>> global;
 	private final Supplier<Ticket> createTicket;
-	private final List<ImmutableMap<UUID, Expr[]>> fin;
+	private final List<Amap<UUID, Alist<Expr>>> fin;
 
 	public DefaultSem( Supplier<Ticket> createTicket ) {
 
 		int i;
 
 		this.createTicket = createTicket;
-		global = new ImmutableMap<>();
+		global = new Amap<>();
 
 		fin = new ArrayList<>();
 		for( i = 0; i < MAX_CHANNEL; i++ )
-			fin.add( new ImmutableMap<UUID, Expr[]>() );
+			fin.add( new Amap<UUID, Alist<Expr>>() );
 	}
 
 	@Override
-	public Expr[] accept( LamExpr lamExpr, ImmutableMap<String, Expr[]> rho ) {
-		return new Expr[] { lamExpr };
+	public Alist<Expr> accept( LamExpr lamExpr, Amap<String, Alist<Expr>> rho ) {
+		
+		Alist<Expr> result;
+		
+		result = new Alist<>();
+		result = result.add( lamExpr );
+		return result;
 	}
 
 	@Override
-	public Expr[] accept( SelectExpr selectExpr,
-			ImmutableMap<String, Expr[]> rho ) {
+	public Alist<Expr> accept( SelectExpr selectExpr,
+			Amap<String, Alist<Expr>> rho ) {
 
 		UUID ref;
 		int channel;
-		ImmutableMap<UUID, Expr[]> fmap;
+		Amap<UUID, Alist<Expr>> fmap;
+		Alist<Expr> result;
 
 		channel = selectExpr.getChannel();
 		ref = selectExpr.getRef();
@@ -64,32 +52,41 @@ public abstract class DefaultSem implements Sem {
 
 		if( fmap.isKey( ref ) )
 			return fmap.get( ref );
-
-		return new Expr[] { selectExpr };
+		
+		result = new Alist<>();
+		result = result.add( selectExpr );
+		
+		return result;
 	}
 
 	@Override
-	public Expr[] accept( StrExpr strExpr, ImmutableMap<String, Expr[]> rho ) {
-		return new Expr[] { strExpr };
+	public Alist<Expr> accept( StrExpr strExpr, Amap<String, Alist<Expr>> rho ) {
+		
+		Alist<Expr> result;
+		
+		result = new Alist<>();
+		result = result.add( strExpr );
+		
+		return result;
 	}
 
 	public Supplier<Ticket> getCreateTicket() {
 		return createTicket;
 	}
 
-	public ImmutableMap<String, Expr[]> getGlobal() {
+	public Amap<String, Alist<Expr>> getGlobal() {
 		return global;
 	}
 
-	public void putFin( int i, UUID ref, Expr[] value ) {
+	public void putFin( int i, UUID ref, Alist<Expr> value ) {
 
-		ImmutableMap<UUID, Expr[]> m;
+		Amap<UUID, Alist<Expr>> m;
 
 		m = fin.get( i );
 		fin.set( i, m.put( ref, value ) );
 	}
 
-	public void putGlobal( String key, Expr[] value ) {
+	public void putGlobal( String key, Alist<Expr> value ) {
 		global = global.put( key, value );
 	}
 

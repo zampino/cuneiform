@@ -12,7 +12,7 @@ public class VarExpr implements Expr {
 	}
 
 	@Override
-	public Expr[] visit( Sem sem, ImmutableMap<String, Expr[]> rho ) {
+	public Alist<Expr> visit( Sem sem, Amap<String, Alist<Expr>> rho ) {
 		return sem.accept( this, rho );
 	}
 
@@ -24,4 +24,8 @@ public class VarExpr implements Expr {
 		return loc;
 	}
 
+	@Override
+	public String toString() {
+		return "{var,\""+name+"\"}";
+	}
 }
