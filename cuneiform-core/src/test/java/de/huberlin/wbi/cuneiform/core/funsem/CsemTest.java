@@ -1,26 +1,21 @@
 package de.huberlin.wbi.cuneiform.core.funsem;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
 import static java.util.UUID.randomUUID;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class CsemTest {
+public class CsemTest implements DefaultTest {
 
 	private static final Supplier<Ticket> CREATE_TICKET = ( ) -> new Ticket(
 			randomUUID() );
-	private static final Location LOC = new Location();
 
 	private DefaultSem csem;
-	private Map<ChannelRef, Expr[]> fin;
-	private Map<String, Expr[]> global;
-	private Map<String, Expr[]> rho;
 	private Location loc;
 
 	/*
@@ -30,10 +25,7 @@ public class CsemTest {
 	@Before
 	public void setup() {
 
-		global = new HashMap<>();
-		fin = new HashMap<>();
-		csem = new Csem( global, CREATE_TICKET, fin );
-		rho = new HashMap<>();
+		csem = new Csem( CREATE_TICKET );
 		loc = new Location();
 	}
 
@@ -43,21 +35,34 @@ public class CsemTest {
 
 	@SuppressWarnings("static-method")
 	@Test
-	public void constructorShouldSetAndGetGlobalCreateTicketAndFin() {
+	public void constructorShouldSetAndGetCreateTicket() {
 
 		DefaultSem defaultSem;
-		HashMap<String, Expr[]> g;
-		HashMap<ChannelRef, Expr[]> f;
 
-		g = new HashMap<>();
-		f = new HashMap<>();
-
-		defaultSem = new Csem( g, CREATE_TICKET, f );
-		assertSame( g, defaultSem.getGlobal() );
+		defaultSem = new Csem( CREATE_TICKET );
 		assertSame( CREATE_TICKET, defaultSem.getCreateTicket() );
-		assertSame( f, defaultSem.getFin() );
 	}
-
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void putGlobalShouldPutValue() {
+		
+		DefaultSem defaultSem;
+		String key;
+		Expr[] value;
+		
+		key = "bla";
+		value = new Expr[] { mock( Expr.class ) };
+		
+		defaultSem = new Csem( CREATE_TICKET );
+		assertEquals( 0, defaultSem.getGlobal().size() );
+		
+		defaultSem.putGlobal( key, value );
+		assertEquals( 1, defaultSem.getGlobal().size() );
+		assertTrue( defaultSem.getGlobal().isKey( key ) );
+		assertArrayEquals( value, defaultSem.getGlobal().get( key ) );
+	}
+	
 	/*
 	 * REFERENCE TESTS
 	 */
@@ -69,7 +74,7 @@ public class CsemTest {
 
 		nil = new Expr[] {};
 
-		x = csem.eval( nil, rho );
+		x = csem.eval( nil, EMPTY_MAP );
 
 		assertArrayEquals( nil, x );
 	}
@@ -81,9 +86,30 @@ public class CsemTest {
 
 		a = new Expr[] { new StrExpr( "A" ) };
 
-		x = csem.eval( a, rho );
+		x = csem.eval( a, EMPTY_MAP );
 
 		assertArrayEquals( a, x );
+	}
+	
+	@Test
+	public void lamShouldEvalItself() {
+		
+		Sign sign;
+		NatBody body;
+		ImmutableMap<String,Expr[]> bodyMap;
+		Expr[] lam, x;
+		
+		sign = new Sign(
+			new Param[] { new Param( "out", false, false ) },
+			new Param[] {},
+			new Param[] {} );
+		
+		bodyMap = EMPTY_MAP.put( "out", new Expr[] { new StrExpr( "blub" ) } );
+		body = new NatBody( Lang.BASH, bodyMap );
+		lam = new Expr[] { new LamExpr( LOC, sign, body ) };
+		
+		x = csem.eval( lam, EMPTY_MAP );
+		assertArrayEquals( lam, x );
 	}
 
 	@Test(expected = CfRuntimeException.class)
@@ -93,16 +119,17 @@ public class CsemTest {
 
 		e = new Expr[] { new VarExpr( LOC, "x" ) };
 
-		csem.eval( e, rho );
+		csem.eval( e, EMPTY_MAP );
 	}
 
 	@Test
 	public void varDefInRhoShouldEvalToBoundValue() {
 
 		Expr[] e, x;
+		ImmutableMap<String,Expr[]> rho;
 
 		e = new Expr[] { new StrExpr( "blub" ) };
-		rho.put( "x", e );
+		rho = EMPTY_MAP.put( "x", e );
 
 		x = csem.eval( new Expr[] { new VarExpr( loc, "x" ) }, rho );
 
@@ -115,9 +142,9 @@ public class CsemTest {
 		Expr[] e, x;
 		
 		e = new Expr[] { new StrExpr( "blub" ) };
-		global.put(  "x", e );
+		csem.putGlobal( "x", e );
 		
-		x = csem.eval(  new Expr[] { new VarExpr( loc, "x" ) }, rho );
+		x = csem.eval(  new Expr[] { new VarExpr( loc, "x" ) }, EMPTY_MAP );
 		
 		assertArrayEquals( e, x );
 	}
@@ -126,12 +153,13 @@ public class CsemTest {
 	public void overrideShouldBindCloserThanRho() {
 		
 		Expr[] e, f, x;
+		ImmutableMap<String,Expr[]> rho;
 		
 		e = new Expr[] { new StrExpr( "bla" ) };
 		f = new Expr[] { new StrExpr( "blub" ) };
 		
-		global.put(  "x", e );
-		rho.put(  "x", f );
+		csem.putGlobal( "x", e );
+		rho = EMPTY_MAP.put(  "x", f );
 		
 		x = csem.eval( new Expr[] { new VarExpr( loc, "x" ) }, rho );
 		
@@ -142,10 +170,12 @@ public class CsemTest {
 	public void defVarShouldCascadeBinding() {
 		
 		Expr[] e, w, x;
+		ImmutableMap<String,Expr[]> rho;
 		
 		e = new Expr[] { new StrExpr( "blub" ) };
-		rho.put( "x", new Expr[] { new VarExpr( loc, "y" ) } );
-		rho.put(  "y", e );
+		rho = EMPTY_MAP
+				.put( "x", new Expr[] { new VarExpr( loc, "y" ) } )
+				.put( "y", e );
 		
 		w = new Expr[] { new VarExpr( loc, "x" ) };
 		x = csem.eval( w, rho );
@@ -157,11 +187,13 @@ public class CsemTest {
 	public void defVarShouldCascadeBindingTwice() {
 		
 		Expr[] a, w, x;
+		ImmutableMap<String,Expr[]> rho;
 		
 		a = new Expr[] { new StrExpr( "A" ) };
-		rho.put( "x", new Expr[] { new VarExpr( loc, "y" ) } );
-		rho.put( "y", new Expr[] { new VarExpr( loc, "z" ) } );
-		rho.put(  "z", a );
+		rho = EMPTY_MAP
+				.put( "x", new Expr[] { new VarExpr( loc, "y" ) } )
+				.put( "y", new Expr[] { new VarExpr( loc, "z" ) } )
+				.put( "z", a );
 		
 		w = new Expr[] { new VarExpr( loc, "x" ) };
 		x = csem.eval( w, rho );
@@ -179,7 +211,7 @@ public class CsemTest {
 		ticket = CREATE_TICKET.get();
 		
 		e = new Expr[] { new SelectExpr( loc, 1, ticket ) };
-		x = csem.eval( e, rho );
+		x = csem.eval( e, EMPTY_MAP );
 		
 		assertArrayEquals( e, x );
 	}
@@ -198,12 +230,35 @@ public class CsemTest {
 		 e = new Expr[] { new SelectExpr( loc, 1, ticket ) };
 		 f = new Expr[] { new StrExpr( "blub" ) };
 		 
-		 fin.put( new ChannelRef( 1, ref ), f );
+		 csem.putFin( 1, ref, f );
 		 
-		 x = csem.eval( e, rho );
+		 x = csem.eval( e, EMPTY_MAP );
 		 
 		 assertArrayEquals( f, x );
 	 }
+	 
+	 /* empty_lam_expr_should_eval_nil( {Eval, CreateTicket} ) ->
+  E = [{str, "bla"}],
+  F = [{app, ?LOC, 1, [], #{"inp" => E}}],
+  ?_assertEqual( [], apply( Eval, [F, #{}, CreateTicket, #{}] ) ). */
+	 
+	 @Test
+	 public void emptyLamExprShouldEvalNil() {
+		 
+		 Expr[] e, f, x;
+		 ImmutableMap<String,Expr[]> bindingMap;
+		 
+		 e = new Expr[] { new StrExpr( "bla" ) };
+		 bindingMap = EMPTY_MAP.put(  "inp", e );
+		 
+		 e = new Expr[] { new StrExpr( "bla" ) };
+		 f = new Expr[] { new AppExpr( LOC, 1, new Expr[] {}, bindingMap ) };
+		 
+		 x = csem.eval( f, EMPTY_MAP );
+		 assertArrayEquals( new Expr[] {}, x );
+	 }
+
+
 	 
 	 /* identity_fn_should_eval_arg( {Eval, CreateTicket} ) ->
   E = [{str, "bla"}],
@@ -221,7 +276,7 @@ public class CsemTest {
 		 Sign sign;
 		 NatBody body;
 		 Expr[] lam;
-		 ImmutableMap bodyMap, bindingMap;
+		 ImmutableMap<String,Expr[]> bodyMap, bindingMap;
 		  
 		 e = new Expr[] { new StrExpr( "bla" ) };
 		 sign = new Sign(
@@ -229,14 +284,14 @@ public class CsemTest {
 				 new Param[] {},
 				 new Param[] { new Param( "inp", false, false ) } );
 		 
-		 bodyMap = new ImmutableMap( "out", new Expr[] { new VarExpr( LOC, "inp" ) } );
+		 bodyMap = EMPTY_MAP.put( "out", new Expr[] { new VarExpr( LOC, "inp" ) } );
 		 body = new NatBody( Lang.BASH, bodyMap );
 		 lam = new Expr[] { new LamExpr( LOC, sign, body ) };
 		 
-		 bindingMap = new ImmutableMap( "inp", e );
+		 bindingMap = EMPTY_MAP.put( "inp", e );
 		 f = new Expr[] { new AppExpr( LOC, 1, lam, bindingMap ) };
 		 
-		 x = csem.eval( f, rho );
+		 x = csem.eval( f, EMPTY_MAP );
 		 
 		 assertArrayEquals( e, x );
 	 }

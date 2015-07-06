@@ -1,10 +1,16 @@
 package de.huberlin.wbi.cuneiform.core.funsem;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public abstract class DefaultSem implements Sem {
+
+	private static final int MAX_CHANNEL = 16;
+
+
 
 	public static Expr[] toExprVec( Stream<Expr> stream ) {
 
@@ -15,52 +21,76 @@ public abstract class DefaultSem implements Sem {
 		resultObj = stream.toArray();
 
 		n = resultObj.length;
-		resultExpr = new Expr[n];
+		resultExpr = new Expr[ n ];
 
 		System.arraycopy( resultObj, 0, resultExpr, 0, n );
 
 		return resultExpr;
 	}
 
-	private final Map<String, Expr[]> global;
+	private ImmutableMap<String, Expr[]> global;
 	private final Supplier<Ticket> createTicket;
-	private final Map<ChannelRef, Expr[]> fin;
+	private final List<ImmutableMap<UUID, Expr[]>> fin;
 
-	public DefaultSem(Map<String, Expr[]> global,
-			Supplier<Ticket> createTicket, Map<ChannelRef, Expr[]> fin) {
+	public DefaultSem( Supplier<Ticket> createTicket ) {
 
-		this.global = global;
+		int i;
+
 		this.createTicket = createTicket;
-		this.fin = fin;
+		global = new ImmutableMap<>();
+
+		fin = new ArrayList<>();
+		for( i = 0; i < MAX_CHANNEL; i++ )
+			fin.add( new ImmutableMap<UUID, Expr[]>() );
 	}
 
 	@Override
-	public Expr[] accept( StrExpr strExpr, Map<String, Expr[]> rho ) {
-		return new Expr[] { strExpr };
+	public Expr[] accept( LamExpr lamExpr, ImmutableMap<String, Expr[]> rho ) {
+		return new Expr[] { lamExpr };
 	}
-	
+
 	@Override
-	public Expr[] accept( SelectExpr selectExpr, Map<String, Expr[]> rho ) {
-		
-		ChannelRef channelRef;
-		
-		channelRef = new ChannelRef( selectExpr.getChannel(), selectExpr.getRef() );
-		
-		if( fin.containsKey( channelRef ) )
-			return fin.get( channelRef );
-		
+	public Expr[] accept( SelectExpr selectExpr,
+			ImmutableMap<String, Expr[]> rho ) {
+
+		UUID ref;
+		int channel;
+		ImmutableMap<UUID, Expr[]> fmap;
+
+		channel = selectExpr.getChannel();
+		ref = selectExpr.getRef();
+
+		fmap = fin.get( channel );
+
+		if( fmap.isKey( ref ) )
+			return fmap.get( ref );
+
 		return new Expr[] { selectExpr };
+	}
+
+	@Override
+	public Expr[] accept( StrExpr strExpr, ImmutableMap<String, Expr[]> rho ) {
+		return new Expr[] { strExpr };
 	}
 
 	public Supplier<Ticket> getCreateTicket() {
 		return createTicket;
 	}
 
-	public Map<ChannelRef, Expr[]> getFin() {
-		return fin;
-	}
-
-	public Map<String, Expr[]> getGlobal() {
+	public ImmutableMap<String, Expr[]> getGlobal() {
 		return global;
 	}
+
+	public void putFin( int i, UUID ref, Expr[] value ) {
+
+		ImmutableMap<UUID, Expr[]> m;
+
+		m = fin.get( i );
+		fin.set( i, m.put( ref, value ) );
+	}
+
+	public void putGlobal( String key, Expr[] value ) {
+		global = global.put( key, value );
+	}
+
 }

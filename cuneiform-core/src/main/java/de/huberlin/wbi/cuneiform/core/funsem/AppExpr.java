@@ -1,17 +1,34 @@
 package de.huberlin.wbi.cuneiform.core.funsem;
 
-import java.util.Map;
-
 public class AppExpr implements Expr {
+	
+	private final Expr[] lam;
+	private final ImmutableMap<String,Expr[]> bindingMap;
 
-	public AppExpr(Location loc, int i, Expr[] lam, ImmutableMap bindingMap) {
-		// TODO Auto-generated constructor stub
+	public AppExpr( Location loc, int channel, Expr[] lam,
+			ImmutableMap<String, Expr[]> bindingMap ) {
+		
+		if( lam == null )
+			throw new IllegalArgumentException( "Lambda compound expression must not be null." );
+		
+		if( bindingMap == null )
+			throw new IllegalArgumentException( "Binding map must not be null." );
+		
+		this.lam = lam;
+		this.bindingMap = bindingMap;
 	}
 
 	@Override
-	public Expr[] visit( Sem sem, Map<String, Expr[]> rho ) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expr[] visit( Sem sem, ImmutableMap<String, Expr[]> rho ) {
+		return sem.accept( this, rho );
+	}
+
+	public Expr[] getLam() {
+		return lam;
+	}
+
+	public ImmutableMap<String, Expr[]> getBindingMap() {
+		return bindingMap;
 	}
 
 }

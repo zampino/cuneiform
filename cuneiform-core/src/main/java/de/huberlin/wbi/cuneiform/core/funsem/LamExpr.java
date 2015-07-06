@@ -1,17 +1,25 @@
 package de.huberlin.wbi.cuneiform.core.funsem;
 
-import java.util.Map;
 
 public class LamExpr implements Expr {
 
+	private final Sign sign;
+	
 	public LamExpr( Location loc, Sign sign, NatBody body ) {
-		// TODO Auto-generated constructor stub
+		
+		if( sign == null )
+			throw new IllegalArgumentException( "Signature must not be null." );
+		
+		this.sign = sign;
 	}
 
 	@Override
-	public Expr[] visit( Sem sem, Map<String, Expr[]> rho ) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expr[] visit( Sem sem, ImmutableMap<String, Expr[]> rho ) {
+		return sem.accept( this, rho );
+	}
+
+	public Sign getSign() {
+		return sign;
 	}
 
 }

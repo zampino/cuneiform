@@ -1,19 +1,64 @@
 package de.huberlin.wbi.cuneiform.core.funsem;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static de.huberlin.wbi.cuneiform.core.funsem.Enumerator.*;
+
 public class Csem extends DefaultSem {
 
-	public Csem(Map<String, Expr[]> global, Supplier<Ticket> createTicket,
-			Map<ChannelRef, Expr[]> fin) {
-		super( global, createTicket, fin );
+	public Csem( Supplier<Ticket> createTicket ) {
+		super( createTicket );
 	}
 
 	@Override
-	public Expr[] eval( Expr[] compoundExpr, Map<String, Expr[]> rho ) {
+	public Expr[] accept( AppExpr appExpr, ImmutableMap<String, Expr[]> rho ) {
+		
+		Expr[] lam;
+		Sign sign;
+		List<ImmutableMap<String,Expr[]>> enumList;
+		ImmutableMap<String,Expr[]> bindingMap;
+		
+		lam = appExpr.getLam();
+		bindingMap = appExpr.getBindingMap();
+		
+		if( lam.length == 0 )
+			return new Expr[] {};
+		
+		sign = ( ( LamExpr )lam[ 0 ] ).getSign();
+		
+		enumList = enumerate( sign, bindingMap );
+		
+        /* EnumList = enum( Sign, BindingMap ),
+        flatten( [step_app( AppLoc, Channel, L, E, CreateTicket, Override ) || L <- LamList, E <- EnumList] ); */
+		
+		
+		return null;
+	}
+
+	@Override
+	public Expr[] accept( VarExpr varExpr, ImmutableMap<String, Expr[]> rho ) {
+
+		String name;
+		ImmutableMap<String, Expr[]> global;
+
+		name = varExpr.getName();
+		global = getGlobal();
+
+		if( global.isKey( name ) )
+			return global.get( name );
+
+		if( !rho.isKey( name ) )
+			throw new CfRuntimeException( varExpr.getLoc(), "The variable "
+					+ name + " is unbound." );
+
+		return rho.get( name );
+	}
+
+	@Override
+	public Expr[] eval( Expr[] compoundExpr, ImmutableMap<String, Expr[]> rho ) {
 
 		Stream<Expr> stream;
 		Expr[] result;
@@ -29,26 +74,7 @@ public class Csem extends DefaultSem {
 		return eval( result, rho );
 	}
 
-	private Expr[] stepSingle( Expr expr, Map<String, Expr[]> rho ) {
+	private Expr[] stepSingle( Expr expr, ImmutableMap<String, Expr[]> rho ) {
 		return expr.visit( this, rho );
-	}
-
-	@Override
-	public Expr[] accept( VarExpr varExpr, Map<String, Expr[]> rho ) {
-
-		String name;
-		Map<String, Expr[]> global;
-
-		name = varExpr.getName();
-		global = getGlobal();
-
-		if( global.containsKey( name ) )
-			return global.get( name );
-
-		if( !rho.containsKey( name ) )
-			throw new CfRuntimeException( varExpr.getLoc(), "The variable "
-					+ name + " is unbound." );
-
-		return rho.get( name );
 	}
 }

@@ -2,8 +2,21 @@ package de.huberlin.wbi.cuneiform.core.funsem;
 
 public class Param {
 
-	public Param( String string, boolean b, boolean c ) {
-		// TODO Auto-generated constructor stub
+	private final String name;
+	
+	public Param( String name, boolean isFile, boolean isList ) {
+		
+		if( name == null )
+			throw new IllegalArgumentException( "Parameter name must not be null." );
+		
+		if( name.isEmpty() )
+			throw new IllegalArgumentException( "Parameter name must not be empty." );
+		
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }

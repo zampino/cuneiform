@@ -3,11 +3,11 @@ package de.huberlin.wbi.cuneiform.core.funsem;
 import java.util.HashMap;
 import java.util.Set;
 
-public class ImmutableMap {
+public class ImmutableMap<K,V> {
 
-	private final HashMap<String,Expr[]> content;
+	private final HashMap<K,V> content;
 	
-	public ImmutableMap( String key, Expr[] value ) {
+	public ImmutableMap( K key, V value ) {
 		this();
 		
 		if( key == null )
@@ -23,13 +23,13 @@ public class ImmutableMap {
 		content = new HashMap<>();
 	}
 	
-	private ImmutableMap( HashMap<String,Expr[]> content ) {
+	private ImmutableMap( HashMap<K,V> content ) {
 		this.content = content;
 	}
 	
-	public ImmutableMap put( String key, Expr[] value ) {
+	public ImmutableMap<K,V> put( K key, V value ) {
 		
-		HashMap<String,Expr[]> newContent;
+		HashMap<K,V> newContent;
 		
 		if( key == null )
 			throw new IllegalArgumentException( "Key term must not be null." );
@@ -41,12 +41,12 @@ public class ImmutableMap {
 		newContent.putAll( content );
 		newContent.put( key, value );
 		
-		return new ImmutableMap( newContent );
+		return new ImmutableMap<>( newContent );
 	}
 	
-	public Expr[] get( String key ) {
+	public V get( K key ) {
 		
-		Expr[] value;
+		V value;
 		
 		if( key == null )
 			throw new IllegalArgumentException( "Key must not be null." );
@@ -59,7 +59,7 @@ public class ImmutableMap {
 		return value;
 	}
 	
-	public Expr[] get( String key, Expr[] def ) {
+	public V get( K key, V def ) {
 		
 		if( key == null )
 			throw new IllegalArgumentException( "Key term must not be null." );
@@ -73,9 +73,9 @@ public class ImmutableMap {
 		return def;
 	}
 	
-	public ImmutableMap merge( ImmutableMap tm2 ) {
+	public ImmutableMap<K,V> merge( ImmutableMap<K,V> tm2 ) {
 		
-		HashMap<String,Expr[]> newContent;
+		HashMap<K,V> newContent;
 		
 		if( tm2 == null )
 			throw new IllegalArgumentException( "Other term map must not be null." );
@@ -84,7 +84,7 @@ public class ImmutableMap {
 		newContent.putAll( content );
 		newContent.putAll( tm2.content );
 		
-		return new ImmutableMap( newContent );		
+		return new ImmutableMap<>( newContent );		
 	}
 	
 	public int size() {
@@ -95,7 +95,7 @@ public class ImmutableMap {
 		return content.isEmpty();
 	}
 
-	public Set<String> keys() {
+	public Set<K> keys() {
 		return content.keySet();
 	}
 
@@ -110,7 +110,7 @@ public class ImmutableMap {
 		buf.append( "#{" );
 		
 		comma = false;
-		for( String key : content.keySet() ) {
+		for( K key : content.keySet() ) {
 			
 			if( comma )
 				buf.append( ',' );
@@ -124,7 +124,7 @@ public class ImmutableMap {
 		return buf.toString();
 	}
 
-	public boolean isKey( String key ) {
+	public boolean isKey( K key ) {
 		return content.containsKey( key );
 	}
 
