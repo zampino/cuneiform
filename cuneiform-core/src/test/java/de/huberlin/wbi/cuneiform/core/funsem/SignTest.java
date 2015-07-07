@@ -1,6 +1,7 @@
 package de.huberlin.wbi.cuneiform.core.funsem;
 
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 public class SignTest {
@@ -59,5 +60,21 @@ public class SignTest {
 				new Param[] {}, inParamVec );
 
 		assertArrayEquals( inParamVec, sign.getInParamVec() );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void constructorStoresOutvarVec() {
+
+		Sign sign;
+		Param[] outParamVec;
+
+		outParamVec = new Param[] { new Param( "out", false, false ) };
+
+		sign = new Sign( outParamVec,
+				new Param[] {}, new Param[] {} );
+
+		assertArrayEquals( outParamVec, sign.getOutParamVec() );
+
 	}
 }

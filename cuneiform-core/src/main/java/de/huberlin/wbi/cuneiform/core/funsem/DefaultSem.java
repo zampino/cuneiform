@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
+
+import static de.huberlin.wbi.cuneiform.core.funsem.Util.*;
 
 public abstract class DefaultSem implements Sem {
 
@@ -27,13 +28,8 @@ public abstract class DefaultSem implements Sem {
 	}
 
 	@Override
-	public Alist<Expr> accept( LamExpr lamExpr, Amap<String, Alist<Expr>> rho ) {
-		
-		Alist<Expr> result;
-		
-		result = new Alist<>();
-		result = result.add( lamExpr );
-		return result;
+	public Alist<Expr> accept( LamExpr lamExpr, Amap<String, Alist<Expr>> rho ) {		
+		return NIL.add( lamExpr );
 	}
 
 	@Override
@@ -43,7 +39,6 @@ public abstract class DefaultSem implements Sem {
 		UUID ref;
 		int channel;
 		Amap<UUID, Alist<Expr>> fmap;
-		Alist<Expr> result;
 
 		channel = selectExpr.getChannel();
 		ref = selectExpr.getRef();
@@ -52,22 +47,13 @@ public abstract class DefaultSem implements Sem {
 
 		if( fmap.isKey( ref ) )
 			return fmap.get( ref );
-		
-		result = new Alist<>();
-		result = result.add( selectExpr );
-		
-		return result;
+				
+		return NIL.add( selectExpr );
 	}
 
 	@Override
-	public Alist<Expr> accept( StrExpr strExpr, Amap<String, Alist<Expr>> rho ) {
-		
-		Alist<Expr> result;
-		
-		result = new Alist<>();
-		result = result.add( strExpr );
-		
-		return result;
+	public Alist<Expr> accept( StrExpr strExpr, Amap<String, Alist<Expr>> rho ) {		
+		return NIL.add( strExpr );
 	}
 
 	public Supplier<Ticket> getCreateTicket() {

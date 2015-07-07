@@ -251,4 +251,24 @@ public class AmapTest {
 		assertFalse( tm.isKey( 3 ) );
 	}
 	
+	@SuppressWarnings("static-method")
+	@Test
+	public void valuesReturnsAlistOfValues() {
+		
+		Amap<Integer,String> tm;
+		Alist<String> v;
+		String s;
+		
+		tm = new Amap<>();
+		tm = tm.put( 1, "bla" ).put( 2, "blub" );
+		
+		v = tm.values();
+		assertEquals( 2, v.size() );
+		s = v.hd();
+		assertTrue( s.equals( "bla" ) || s.equals( "blub" ) );
+		s = v.tl().hd();
+		assertTrue( s.equals( "bla" ) || s.equals( "blub" ) );
+		
+	}
+	
 }

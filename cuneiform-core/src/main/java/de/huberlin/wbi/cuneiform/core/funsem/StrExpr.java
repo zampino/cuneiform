@@ -38,6 +38,16 @@ public class StrExpr implements Expr {
 	public Alist<Expr> visit( Sem sem, Amap<String, Alist<Expr>> rho ) {
 		return sem.accept( this, rho );
 	}
+
+	@Override
+	public boolean isFinal() {
+		return true;
+	}
+
+	@Override
+	public boolean isLamExpr() {
+		return false;
+	}
 	
 
 }

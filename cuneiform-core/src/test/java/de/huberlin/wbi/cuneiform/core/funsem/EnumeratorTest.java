@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static de.huberlin.wbi.cuneiform.core.funsem.Enumerator.*;
 import static org.junit.Assert.*;
+import static de.huberlin.wbi.cuneiform.core.funsem.Util.*;
 
 public class EnumeratorTest implements DefaultTest {
 
@@ -51,8 +52,7 @@ public class EnumeratorTest implements DefaultTest {
 		sign = new Sign( new Param[] { new Param( "out", false, false ) },
 				new Param[] {}, new Param[] { new Param( "p", false, false ) } );
 
-		e = new Alist<>();
-		e = e.add( new StrExpr( "d" ) ).add( new StrExpr( "c" ) ).add( new StrExpr( "b" ) ).add( new StrExpr( "a" ) );
+		e = NIL.add( new StrExpr( "d" ) ).add( new StrExpr( "c" ) ).add( new StrExpr( "b" ) ).add( new StrExpr( "a" ) );
 		
 		bindingMap = EMPTY_MAP.put( "p", e );
 
@@ -62,32 +62,28 @@ public class EnumeratorTest implements DefaultTest {
 		map = result.hd();
 		assertEquals( 1, map.size() );
 		assertTrue( map.isKey( "p" ) );
-		x = new Alist<>();
-		x = x.add( new StrExpr( "a" ) );
+		x = NIL.add( new StrExpr( "a" ) );
 		assertEquals( x, map.get( "p" ) );
 		
 		result = result.tl();
 		map = result.hd();
 		assertEquals( 1, map.size() );
 		assertTrue( map.isKey( "p" ) );
-		x = new Alist<>();
-		x = x.add( new StrExpr( "b" ) );
+		x = NIL.add( new StrExpr( "b" ) );
 		assertEquals( x, map.get( "p" ) );
 
 		result = result.tl();
 		map = result.hd();
 		assertEquals( 1, map.size() );
 		assertTrue( map.isKey( "p" ) );
-		x = new Alist<>();
-		x = x.add( new StrExpr( "c" ) );
+		x = NIL.add( new StrExpr( "c" ) );
 		assertEquals( x, map.get( "p" ) );
 
 		result = result.tl();
 		map = result.hd();
 		assertEquals( 1, map.size() );
 		assertTrue( map.isKey( "p" ) );
-		x = new Alist<>();
-		x = x.add( new StrExpr( "d" ) );
+		x = NIL.add( new StrExpr( "d" ) );
 		assertEquals( x, map.get( "p" ) );
 	}
 }

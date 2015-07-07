@@ -128,4 +128,15 @@ public class Amap<K,V> {
 		return content.containsKey( key );
 	}
 
+	public Alist<V> values() {
+		
+		Alist<V> acc;
+		
+		acc = new Alist<>();
+		for( V v : content.values() )
+			acc = acc.add( v );
+		
+		return acc;
+	}
+
 }

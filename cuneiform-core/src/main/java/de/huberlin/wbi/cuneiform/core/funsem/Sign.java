@@ -4,6 +4,7 @@ public class Sign {
 
 	private final Param[] correlParamVec;
 	private final Param[] inParamVec;
+	private final Param[] outParamVec;
 	
 	public Sign( Param[] outParamVec, Param[] correlParamVec, Param[] inParamVec ) {
 		
@@ -21,6 +22,7 @@ public class Sign {
 		
 		this.correlParamVec = correlParamVec;
 		this.inParamVec = inParamVec;
+		this.outParamVec = outParamVec;
 	}
 
 	public Param[] getCorrelParamVec() {
@@ -29,6 +31,10 @@ public class Sign {
 
 	public Param[] getInParamVec() {
 		return inParamVec;
+	}
+
+	public Param[] getOutParamVec() {
+		return outParamVec;
 	}
 
 }
