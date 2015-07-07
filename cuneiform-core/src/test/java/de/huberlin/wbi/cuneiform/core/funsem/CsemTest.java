@@ -43,28 +43,28 @@ public class CsemTest implements DefaultTest {
 		defaultSem = new Csem( CREATE_TICKET );
 		assertSame( CREATE_TICKET, defaultSem.getCreateTicket() );
 	}
-	
+
 	@SuppressWarnings("static-method")
 	@Test
 	public void putGlobalShouldPutValue() {
-		
+
 		DefaultSem defaultSem;
 		String key;
 		Alist<Expr> value;
-		
+
 		key = "bla";
-		
+
 		value = NIL.add( mock( Expr.class ) );
-		
+
 		defaultSem = new Csem( CREATE_TICKET );
 		assertEquals( 0, defaultSem.getGlobal().size() );
-		
+
 		defaultSem.putGlobal( key, value );
 		assertEquals( 1, defaultSem.getGlobal().size() );
 		assertTrue( defaultSem.getGlobal().isKey( key ) );
 		assertEquals( value, defaultSem.getGlobal().get( key ) );
 	}
-	
+
 	/*
 	 * REFERENCE TESTS
 	 */
@@ -90,28 +90,26 @@ public class CsemTest implements DefaultTest {
 
 		assertEquals( a, x );
 	}
-	
+
 	@Test
 	public void lamShouldEvalItself() {
-		
+
 		Sign sign;
 		NatBody body;
-		Amap<String,Alist<Expr>> bodyMap;
+		Amap<String, Alist<Expr>> bodyMap;
 		Alist<Expr> lam, x, e;
-		
-		sign = new Sign(
-			new Param[] { new Param( "out", false, false ) },
-			new Param[] {},
-			new Param[] {} );
-		
+
+		sign = new Sign( PARAMLIST.add( new Param( "out", false, false ) ),
+				PARAMLIST, PARAMLIST );
+
 		e = NIL.add( new StrExpr( "blub" ) );
-		
+
 		bodyMap = EMPTY_MAP.put( "out", e );
 		body = new NatBody( bodyMap );
-		
+
 		lam = new Alist<>();
 		lam = lam.add( new LamExpr( LOC, sign, body ) );
-		
+
 		x = csem.eval( lam, EMPTY_MAP );
 		assertEquals( lam, x );
 	}
@@ -130,191 +128,170 @@ public class CsemTest implements DefaultTest {
 	public void varDefInRhoShouldEvalToBoundValue() {
 
 		Alist<Expr> e, f, x;
-		Amap<String,Alist<Expr>> rho;
+		Amap<String, Alist<Expr>> rho;
 
 		e = NIL.add( new StrExpr( "blub" ) );
 		rho = EMPTY_MAP.put( "x", e );
 
-		f = NIL.add( new VarExpr( loc, "x" ) );		
-		
+		f = NIL.add( new VarExpr( loc, "x" ) );
+
 		x = csem.eval( f, rho );
 
 		assertEquals( e, x );
 	}
-		
+
 	@Test
 	public void varDefInGlobalShouldEvalToBoundValue() {
-		
+
 		Alist<Expr> e, f, x;
-		
+
 		e = NIL.add( new StrExpr( "blub" ) );
-		
+
 		csem.putGlobal( "x", e );
-		
+
 		f = NIL.add( new VarExpr( loc, "x" ) );
 
 		x = csem.eval( f, EMPTY_MAP );
-		
+
 		assertEquals( e, x );
 	}
-	
+
 	@Test
 	public void overrideShouldBindCloserThanRho() {
-		
+
 		Alist<Expr> e, f, g, x;
-		Amap<String,Alist<Expr>> rho;
-		
+		Amap<String, Alist<Expr>> rho;
+
 		e = NIL.add( new StrExpr( "bla" ) );
 		f = NIL.add( new StrExpr( "blub" ) );
-		
+
 		csem.putGlobal( "x", e );
-		rho = EMPTY_MAP.put(  "x", f );
-		
+		rho = EMPTY_MAP.put( "x", f );
+
 		g = NIL.add( new VarExpr( loc, "x" ) );
-		
+
 		x = csem.eval( g, rho );
-		
+
 		assertEquals( e, x );
 	}
-	
+
 	@Test
 	public void defVarShouldCascadeBinding() {
-		
+
 		Alist<Expr> e, f, w, x;
-		Amap<String,Alist<Expr>> rho;
-		
+		Amap<String, Alist<Expr>> rho;
+
 		e = NIL.add( new StrExpr( "blub" ) );
-		
+
 		f = NIL.add( new VarExpr( loc, "y" ) );
-		
-		rho = EMPTY_MAP
-				.put( "x", f )
-				.put( "y", e );
-		
+
+		rho = EMPTY_MAP.put( "x", f ).put( "y", e );
+
 		w = NIL.add( new VarExpr( loc, "x" ) );
-		
+
 		x = csem.eval( w, rho );
-		
+
 		assertEquals( e, x );
 	}
-	  
+
 	@Test
 	public void defVarShouldCascadeBindingTwice() {
-		
+
 		Alist<Expr> a, w, x, y, z;
-		Amap<String,Alist<Expr>> rho;
-		
+		Amap<String, Alist<Expr>> rho;
+
 		a = NIL.add( new StrExpr( "A" ) );
-		y = NIL.add( new VarExpr( loc, "y" ) );		
+		y = NIL.add( new VarExpr( loc, "y" ) );
 		z = NIL.add( new VarExpr( loc, "z" ) );
-		
-		rho = EMPTY_MAP
-				.put( "x", y )
-				.put( "y", z )
-				.put( "z", a );
-		
+
+		rho = EMPTY_MAP.put( "x", y ).put( "y", z ).put( "z", a );
+
 		w = NIL.add( new VarExpr( loc, "x" ) );
-		
+
 		x = csem.eval( w, rho );
-		
+
 		assertEquals( a, x );
 	}
 
-	
 	@Test
 	public void unfinishedTicketShouldEvalToItself() {
-		
+
 		Ticket ticket;
 		Alist<Expr> e, x;
-		
+
 		ticket = CREATE_TICKET.get();
-		
-		
+
 		e = NIL.add( new SelectExpr( loc, 1, ticket ) );
-		
+
 		x = csem.eval( e, EMPTY_MAP );
-		
+
 		assertEquals( e, x );
 	}
-	  
 
 	@Test
 	public void finishedTicketShouldEvalToValue() {
-		 
+
 		Ticket ticket;
 		UUID ref;
 		Alist<Expr> e, f, x;
-		 
+
 		ticket = CREATE_TICKET.get();
 		ref = ticket.getRef();
-		 
+
 		e = NIL.add( new SelectExpr( loc, 1, ticket ) );
-		 
+
 		f = NIL.add( new StrExpr( "blub" ) );
-		 
+
 		csem.putFin( 1, ref, f );
-		 
+
 		x = csem.eval( e, EMPTY_MAP );
-		 
+
 		assertEquals( f, x );
 	}
-	 
+
 	@Test
 	public void emptyLamExprShouldEvalNil() {
-		 
+
 		Alist<Expr> e, f, x;
-		Amap<String,Alist<Expr>> bindingMap;
-		 
+		Amap<String, Alist<Expr>> bindingMap;
+
 		e = NIL.add( new StrExpr( "bla" ) );
-		 
+
 		bindingMap = EMPTY_MAP.put( "inp", e );
 
 		f = NIL.add( new AppExpr( LOC, 1, new Alist<Expr>(), bindingMap ) );
-		 
+
 		x = csem.eval( f, EMPTY_MAP );
 		assertEquals( new Alist<Expr>(), x );
 	}
 
-
-	 
-	/* identity_fn_should_eval_arg( {Eval, CreateTicket} ) ->
-  E = [{str, "bla"}],
-  Sign = {sign, [{param, "out", false, false}],
-                [], [{param, "inp", false, false}]},
-  Body = {natbody, #{"out" => [{var, ?LOC, "inp"}]}},
-  LamList = [{lam, ?LOC, Sign, Body}],
-  F = [{app, ?LOC, 1, LamList, #{"inp" => E}}],
-  ?_assertEqual( E, apply( Eval, [F, #{}, CreateTicket, #{}] ) ). */
-	 
 	@Test
 	public void identityFnShouldEvalArg() {
-		 
+
 		Alist<Expr> e, f, x, inp;
 		Sign sign;
 		NatBody body;
 		Alist<Expr> lam;
-		Amap<String,Alist<Expr>> bodyMap, bindingMap;
-		
+		Amap<String, Alist<Expr>> bodyMap, bindingMap;
+
 		e = NIL.add( new StrExpr( "bla" ) );
-		
-		sign = new Sign(
-				new Param[] { new Param( "out", false, false ) },
-				new Param[] {},
-				new Param[] { new Param( "inp", false, false ) } );
-		
+
+		sign = new Sign( PARAMLIST.add( new Param( "out", false, false ) ),
+				PARAMLIST, PARAMLIST.add( new Param( "inp", false, false ) ) );
+
 		inp = NIL.add( new VarExpr( LOC, "inp" ) );
-		
+
 		bodyMap = EMPTY_MAP.put( "out", inp );
 		body = new NatBody( bodyMap );
-		
+
 		lam = NIL.add( new LamExpr( LOC, sign, body ) );
-		 
+
 		bindingMap = EMPTY_MAP.put( "inp", e );
-		
+
 		f = NIL.add( new AppExpr( LOC, 1, lam, bindingMap ) );
-		 
+
 		x = csem.eval( f, EMPTY_MAP );
-		 
+
 		assertEquals( e, x );
 	}
 }

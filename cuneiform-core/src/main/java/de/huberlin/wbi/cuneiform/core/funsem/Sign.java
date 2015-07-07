@@ -2,16 +2,16 @@ package de.huberlin.wbi.cuneiform.core.funsem;
 
 public class Sign {
 
-	private final Param[] correlParamVec;
-	private final Param[] inParamVec;
-	private final Param[] outParamVec;
+	private final Alist<Param> correlParamVec;
+	private final Alist<Param> inParamVec;
+	private final Alist<Param> outParamVec;
 	
-	public Sign( Param[] outParamVec, Param[] correlParamVec, Param[] inParamVec ) {
+	public Sign( Alist<Param> outParamVec, Alist<Param> correlParamVec, Alist<Param> inParamVec ) {
 		
 		if( outParamVec == null )
 			throw new IllegalArgumentException( "Output parameter vector must not be null." );
 		
-		if( outParamVec.length < 1 )
+		if( outParamVec.isEmpty() )
 			throw new IllegalArgumentException( "Output parameter vector must not be empty." );
 		
 		if( correlParamVec == null )
@@ -25,15 +25,15 @@ public class Sign {
 		this.outParamVec = outParamVec;
 	}
 
-	public Param[] getCorrelParamVec() {
+	public Alist<Param> getCorrelParamVec() {
 		return correlParamVec;
 	}
 
-	public Param[] getInParamVec() {
+	public Alist<Param> getInParamVec() {
 		return inParamVec;
 	}
 
-	public Param[] getOutParamVec() {
+	public Alist<Param> getOutParamVec() {
 		return outParamVec;
 	}
 

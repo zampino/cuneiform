@@ -5,27 +5,27 @@ public class Enumerator {
 	public static Alist<Amap<String, Alist<Expr>>> enumerate( Sign sign,
 			Amap<String, Alist<Expr>> bindingMap ) {
 
-		Param[] paramVec;
+		Alist<Param> paramList;
 		Alist<Amap<String, Alist<Expr>>> comb;
 		Alist<Expr> value;
 		String paramName;
 		Amap<String,Alist<Expr>> m;
 		Alist<Expr> l;
 
-		if( sign.getCorrelParamVec().length > 0 )
+		if( !sign.getCorrelParamVec().isEmpty() )
 			throw new IllegalArgumentException(
 					"Cannot enumerate correlated signature." );
 
-		paramVec = sign.getInParamVec();
+		paramList = sign.getInParamVec();
 		comb = new Alist<>();
 
-		if( paramVec.length == 0 ) {
+		if( paramList.isEmpty() ) {
 
 			comb = comb.add( new Amap<String, Alist<Expr>>() );
 			return comb;
 		}
 
-		for( Param param : paramVec ) {
+		for( Param param : paramList ) {
 			
 			paramName = param.getName();
 			value = bindingMap.get( paramName );

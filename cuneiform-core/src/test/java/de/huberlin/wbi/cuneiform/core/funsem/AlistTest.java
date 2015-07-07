@@ -225,4 +225,39 @@ public class AlistTest {
 		
 		assertEquals( y, l2 );
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=IndexOutOfBoundsException.class )
+	public void nthZeroOnNonEmptyListShouldThrowIae() {
+		
+		Alist<Integer> l;
+		
+		l = new Alist<>();
+		l = l.add( 1 );
+		
+		l.nth( 0 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test( expected=IndexOutOfBoundsException.class )
+	public void nthZeroOnEmptyListShouldThrowIae() {
+		
+		Alist<Integer> l;
+		
+		l = new Alist<>();
+		
+		l.nth( 0 );
+	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void nthShouldWork() {
+		
+		Alist<Integer> l;
+		
+		l = new Alist<>();
+		l = l.add( 15 ).add( 20 );
+		
+		assertEquals( Integer.valueOf( 15 ), l.nth( 2 ) );	
+	}
 }

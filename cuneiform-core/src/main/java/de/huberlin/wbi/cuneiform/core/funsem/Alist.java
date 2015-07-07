@@ -7,6 +7,31 @@ import java.util.function.Function;
 
 public class Alist<T> implements Iterable<T> {
 
+	private class AlistIterator implements Iterator<T> {
+
+		private Alist<T> cursor;
+
+		AlistIterator( Alist<T> template ) {
+			cursor = template;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return !cursor.isEmpty();
+		}
+
+		@Override
+		public T next() {
+
+			T elem;
+
+			elem = cursor.hd();
+			cursor = cursor.tl();
+
+			return elem;
+		}
+	}
+
 	private class Cons extends Alist<T> {
 
 		private final T hd;
@@ -73,6 +98,18 @@ public class Alist<T> implements Iterable<T> {
 		public Alist<T> map( Function<T, T> fn ) {
 			return new Cons( fn.apply( hd ), tl.map( fn ) );
 		}
+		
+		@Override
+		public T nth( int i ) {
+			
+			if( i < 1 )
+				throw new IndexOutOfBoundsException( "Index out of bounds." );
+			
+			if( i == 1 )
+				return hd;
+			
+			return tl.nth( i-1 );
+		}
 
 		@Override
 		public int size() {
@@ -102,31 +139,6 @@ public class Alist<T> implements Iterable<T> {
 		}
 
 	}
-	
-	private class AlistIterator implements Iterator<T> {
-		
-		private Alist<T> cursor;
-		
-		AlistIterator( Alist<T> template ) {
-			cursor = template;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return !cursor.isEmpty();
-		}
-
-		@Override
-		public T next() {
-			
-			T elem;
-			
-			elem = cursor.hd();
-			cursor = cursor.tl();
-			
-			return elem;
-		}
-	} 
 
 	public Alist<T> add( T hd ) {
 		return new Cons( hd, this );
@@ -171,9 +183,19 @@ public class Alist<T> implements Iterable<T> {
 		return true;
 	}
 
+	@Override
+	public Iterator<T> iterator() {
+		return new AlistIterator( this );
+	}
+
 	@SuppressWarnings("unused")
 	public Alist<T> map( Function<T, T> fn ) {
 		return this;
+	}
+
+	@SuppressWarnings("unused")
+	public T nth( int i ) {
+		throw new IndexOutOfBoundsException( "Index out of bounds." );
 	}
 
 	public Alist<T> reverse() {
@@ -184,7 +206,7 @@ public class Alist<T> implements Iterable<T> {
 		trav = this;
 		result = new Alist<>();
 
-		while( !trav.isEmpty() ) {
+		while (!trav.isEmpty()) {
 			result = result.add( trav.hd() );
 			trav = trav.tl();
 		}
@@ -215,7 +237,7 @@ public class Alist<T> implements Iterable<T> {
 		elementSet = new HashSet<>();
 		trav = this;
 
-		while( !trav.isEmpty() ) {
+		while (!trav.isEmpty()) {
 			elementSet.add( trav.hd() );
 			trav = trav.tl();
 		}
@@ -226,11 +248,6 @@ public class Alist<T> implements Iterable<T> {
 			result = result.add( element );
 
 		return result;
-	}
-
-	@Override
-	public Iterator<T> iterator() {
-		return new AlistIterator( this );
 	}
 
 }

@@ -3,26 +3,27 @@ package de.huberlin.wbi.cuneiform.core.funsem;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static de.huberlin.wbi.cuneiform.core.funsem.Util.*;
 
 public class SignTest {
 
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test(expected = IllegalArgumentException.class)
 	public void constructorThrowsIaeOnNullOutputParamList() {
-		new Sign( null, new Param[] {}, new Param[] {} );
+		new Sign( null, PARAMLIST, PARAMLIST );
 	}
 
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test(expected = IllegalArgumentException.class)
 	public void contstructorThrowsIaeOnEmptyOutputParamList() {
-		new Sign( new Param[] {}, new Param[] {}, new Param[] {} );
+		new Sign( PARAMLIST, PARAMLIST, PARAMLIST );
 	}
 
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test(expected = IllegalArgumentException.class)
 	public void constructorThrowsIaeOnNullCorrelParamList() {
-		new Sign( new Param[] { new Param( "out", false, false ) }, null,
-				new Param[] {} );
+		new Sign( PARAMLIST.add( new Param( "out", false, false ) ), null,
+				PARAMLIST );
 	}
 
 	@SuppressWarnings("static-method")
@@ -30,21 +31,21 @@ public class SignTest {
 	public void constructorStoresCorrelParamVec() {
 
 		Sign sign;
-		Param[] correlParamVec;
+		Alist<Param> correlParamVec;
 
-		correlParamVec = new Param[] { new Param( "correl", false, false ) };
+		correlParamVec = PARAMLIST.add( new Param( "correl", false, false ) );
 
-		sign = new Sign( new Param[] { new Param( "out", false, false ) },
-				correlParamVec, new Param[] {} );
+		sign = new Sign( PARAMLIST.add( new Param( "out", false, false ) ),
+				correlParamVec, PARAMLIST );
 
-		assertArrayEquals( correlParamVec, sign.getCorrelParamVec() );
+		assertEquals( correlParamVec, sign.getCorrelParamVec() );
 	}
 
 	@SuppressWarnings({ "static-method", "unused" })
 	@Test(expected = IllegalArgumentException.class)
 	public void constructorThrowsIaeOnNullInputParamList() {
-		new Sign( new Param[] { new Param( "out", false, false ) },
-				new Param[] {}, null );
+		new Sign( PARAMLIST.add( new Param( "out", false, false ) ),
+				PARAMLIST, null );
 	}
 
 	@SuppressWarnings("static-method")
@@ -52,29 +53,28 @@ public class SignTest {
 	public void constructorStoresInParamVec() {
 
 		Sign sign;
-		Param[] inParamVec;
+		Alist<Param> inParamVec;
 
-		inParamVec = new Param[] { new Param( "p", false, false ) };
+		inParamVec = PARAMLIST.add( new Param( "p", false, false ) );
 
-		sign = new Sign( new Param[] { new Param( "out", false, false ) },
-				new Param[] {}, inParamVec );
+		sign = new Sign( PARAMLIST.add( new Param( "out", false, false ) ),
+				PARAMLIST, inParamVec );
 
-		assertArrayEquals( inParamVec, sign.getInParamVec() );
+		assertEquals( inParamVec, sign.getInParamVec() );
 	}
-	
+
 	@SuppressWarnings("static-method")
 	@Test
 	public void constructorStoresOutvarVec() {
 
 		Sign sign;
-		Param[] outParamVec;
+		Alist<Param> outParamVec;
 
-		outParamVec = new Param[] { new Param( "out", false, false ) };
+		outParamVec = PARAMLIST.add( new Param( "out", false, false ) );
 
-		sign = new Sign( outParamVec,
-				new Param[] {}, new Param[] {} );
+		sign = new Sign( outParamVec, PARAMLIST, PARAMLIST );
 
-		assertArrayEquals( outParamVec, sign.getOutParamVec() );
+		assertEquals( outParamVec, sign.getOutParamVec() );
 
 	}
 }

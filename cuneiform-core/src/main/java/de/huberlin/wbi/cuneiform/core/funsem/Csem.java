@@ -43,7 +43,7 @@ public class Csem extends DefaultSem {
 
 				// binding map is final
 
-				if( sign.getCorrelParamVec().length == 0 ) {
+				if( sign.getCorrelParamVec().isEmpty() ) {
 
 					// no task correlation
 
@@ -80,7 +80,7 @@ public class Csem extends DefaultSem {
 	public Alist<Expr> stepApp( Location appLoc, int channel, LamExpr lamExpr,
 			Amap<String, Alist<Expr>> binding ) {
 
-		Param[] outParamList;
+		Alist<Param> outParamList;
 		Param outParam;
 		Amap<String, Alist<Expr>> ctx, bodyMap, bodyMap1;
 		NatBody natBody;
@@ -94,7 +94,7 @@ public class Csem extends DefaultSem {
 
 			sign = lamExpr.getSign();
 			outParamList = sign.getOutParamVec();
-			outParam = outParamList[ channel - 1 ];
+			outParam = outParamList.nth( channel );
 			outParamName = outParam.getName();
 			natBody = (NatBody) lamExpr.getBody();
 			bodyMap = natBody.getBodyMap();

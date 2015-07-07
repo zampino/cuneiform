@@ -8,16 +8,14 @@ import static de.huberlin.wbi.cuneiform.core.funsem.Util.*;
 
 public class EnumeratorTest implements DefaultTest {
 
-
 	@SuppressWarnings("static-method")
 	@Test(expected = IllegalArgumentException.class)
 	public void enumerateThrowsIaeOnTaskCorrelatedSignature() {
 
 		Sign sign;
 
-		sign = new Sign( new Param[] { new Param( "out", false, false ) },
-				new Param[] { new Param( "correl", false, false ) },
-				new Param[] {} );
+		sign = new Sign( PARAMLIST.add( new Param( "out", false, false ) ),
+				PARAMLIST.add( new Param( "correl", false, false ) ), PARAMLIST );
 
 		enumerate( sign, EMPTY_MAP );
 	}
@@ -30,8 +28,8 @@ public class EnumeratorTest implements DefaultTest {
 		Alist<Amap<String, Alist<Expr>>> result;
 		Amap<String, Alist<Expr>> map;
 
-		sign = new Sign( new Param[] { new Param( "out", false, false ) },
-				new Param[] {}, new Param[] {} );
+		sign = new Sign( PARAMLIST.add( new Param( "out", false, false ) ),
+				PARAMLIST, PARAMLIST );
 
 		result = enumerate( sign, EMPTY_MAP );
 		assertEquals( 1, result.size() );
@@ -49,11 +47,12 @@ public class EnumeratorTest implements DefaultTest {
 		Amap<String, Alist<Expr>> bindingMap, map;
 		Alist<Expr> e, x;
 
-		sign = new Sign( new Param[] { new Param( "out", false, false ) },
-				new Param[] {}, new Param[] { new Param( "p", false, false ) } );
+		sign = new Sign( PARAMLIST.add( new Param( "out", false, false ) ),
+				PARAMLIST, PARAMLIST.add( new Param( "p", false, false ) ) );
 
-		e = NIL.add( new StrExpr( "d" ) ).add( new StrExpr( "c" ) ).add( new StrExpr( "b" ) ).add( new StrExpr( "a" ) );
-		
+		e = NIL.add( new StrExpr( "d" ) ).add( new StrExpr( "c" ) )
+				.add( new StrExpr( "b" ) ).add( new StrExpr( "a" ) );
+
 		bindingMap = EMPTY_MAP.put( "p", e );
 
 		result = enumerate( sign, bindingMap );
@@ -64,7 +63,7 @@ public class EnumeratorTest implements DefaultTest {
 		assertTrue( map.isKey( "p" ) );
 		x = NIL.add( new StrExpr( "a" ) );
 		assertEquals( x, map.get( "p" ) );
-		
+
 		result = result.tl();
 		map = result.hd();
 		assertEquals( 1, map.size() );
