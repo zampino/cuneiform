@@ -109,6 +109,9 @@ public class Cons extends List {
 		head.unspecialize();
 		tail.unspecialize();	
 	}
-	
 
+	@Override
+	public int size() {
+		return 1+tl().size();
+	}	
 }
