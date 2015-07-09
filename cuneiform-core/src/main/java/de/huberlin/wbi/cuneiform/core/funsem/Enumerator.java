@@ -45,7 +45,7 @@ public class Enumerator {
 					
 			}
 			else {
-				// TODO
+				throw new UnsupportedOperationException( "NYI" );
 			}
 		}
 		

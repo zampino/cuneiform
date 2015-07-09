@@ -28,53 +28,48 @@ public class Csem extends DefaultSem {
 		if( lam.isEmpty() )
 			return NIL;
 
-		if( isFinal( lam ) ) {
+		if( !isFinal( lam ) )
+			return NIL.add( appExpr );
+		
+		// lambda compound expression is final
+		
+		e = lam.hd();
+		if( !e.isLamExpr() )
+			throw new RuntimeException( "Expected lambda expression: " + e );
 
-			// lambda compound expression is final
-			e = lam.hd();
-			if( !e.isLamExpr() )
-				throw new RuntimeException( "Expected lambda expression: " + e );
+		sign = ( (LamExpr) e ).getSign();
+		channel = appExpr.getChannel();
+		appLoc = appExpr.getLocation();
 
-			sign = ( (LamExpr) e ).getSign();
-			channel = appExpr.getChannel();
-			appLoc = appExpr.getLocation();
+		if( !isFinal( bindingMap ) )
+			return NIL.add( appExpr );
 
-			if( isFinal( bindingMap ) ) {
+		// binding map is final
 
-				// binding map is final
+		if( sign.getCorrelParamVec().isEmpty() ) {
 
-				if( sign.getCorrelParamVec().isEmpty() ) {
+			// no task correlation
 
-					// no task correlation
+			enumList = enumerate( sign, bindingMap );
 
-					enumList = enumerate( sign, bindingMap );
+			result = NIL;
+			for( Amap<String, Alist<Expr>> en : enumList )
+				for( Expr l : lam ) {
 
-					result = NIL;
-					for( Amap<String, Alist<Expr>> en : enumList )
-						for( Expr l : lam ) {
+					if( !l.isLamExpr() )
+						throw new RuntimeException(
+								"Expected lambda expression: " + e );
 
-							if( !l.isLamExpr() )
-								throw new RuntimeException(
-										"Expected lambda expression: " + e );
-
-							result = result.append( stepApp( appLoc, channel,
-									(LamExpr) l, en ) );
-						}
-
-					return result;
+					result = result.append( stepApp( appLoc, channel,
+							(LamExpr) l, en ) );
 				}
 
-				// task correlation must be resolved
-
-				throw new UnsupportedOperationException( "NYI" );
-			}
-
-			// return current state
-			return NIL.add( appExpr );
+			return result;
 		}
 
-		// return current state
-		return NIL.add( appExpr );
+		// task correlation must be resolved
+
+		throw new UnsupportedOperationException( "NYI" );
 	}
 
 	public Alist<Expr> stepApp( Location appLoc, int channel, LamExpr lamExpr,
