@@ -294,4 +294,19 @@ public class CsemTest implements DefaultTest {
 
 		assertEquals( e, x );
 	}
+	
+	/* multiple_output_should_be_bindable( {Eval, CreateTicket} ) ->
+	  Sign = {sign, [{param, "out1", false, false},
+	                 {param, "out2", false, false}],
+	                [], []},
+	  E1 = [{str, "bla"}],
+	  E2 = [{str, "blub"}],
+	  Body = {natbody, #{"out1" => E1, "out2" => E2}},
+	  Lam = [{lam, ?LOC, Sign, Body}],
+	  F1 = [{app, ?LOC, 1, Lam, #{}}],
+	  F2 = [{app, ?LOC, 2, Lam, #{}}],
+	  [?_assertEqual( E1, apply( Eval, [F1, #{}, CreateTicket, #{}] ) ),
+	   ?_assertEqual( E2, apply( Eval, [F2, #{}, CreateTicket, #{}] ) )]. */
+	   
+	   
 }

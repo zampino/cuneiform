@@ -3,6 +3,7 @@ package de.huberlin.wbi.cuneiform.core.funsem;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Alist<T> implements Iterable<T> {
@@ -77,6 +78,11 @@ public class Alist<T> implements Iterable<T> {
 		@Override
 		public Alist<T> flatMap( Function<T, Alist<T>> fn ) {
 			return fn.apply( hd ).append( tl.flatMap( fn ) );
+		}
+		
+		@Override
+		public <X> X foldl( BiFunction<T,X,X> fn, X acc0 ) {			
+			return tl.foldl( fn, fn.apply( hd, acc0 ) );
 		}
 
 		@Override
@@ -168,6 +174,11 @@ public class Alist<T> implements Iterable<T> {
 	public Alist<T> flatMap( Function<T, Alist<T>> fn ) {
 		return this;
 	}
+	
+	@SuppressWarnings("unused")
+	public <X> X foldl( BiFunction<T, X, X> fn, X acc0 ) {
+		return acc0;	
+	}
 
 	@Override
 	public int hashCode() {
@@ -175,7 +186,7 @@ public class Alist<T> implements Iterable<T> {
 	}
 
 	public T hd() {
-		throw new RuntimeException( "Cannot retrieve head from nil." );
+		throw new UnsupportedOperationException( "Cannot retrieve head from nil." );
 	}
 
 	@SuppressWarnings("static-method")
@@ -220,7 +231,7 @@ public class Alist<T> implements Iterable<T> {
 	}
 
 	public Alist<T> tl() {
-		throw new RuntimeException( "Cannot retrieve tail from nil." );
+		throw new UnsupportedOperationException( "Cannot retrieve tail from nil." );
 	}
 
 	@Override

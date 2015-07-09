@@ -260,4 +260,19 @@ public class AlistTest {
 		
 		assertEquals( Integer.valueOf( 15 ), l.nth( 2 ) );	
 	}
+	
+	@SuppressWarnings("static-method")
+	@Test
+	public void foldlShouldWork() {
+		
+		Alist<Integer> l;
+		int sum;
+		
+		l = new Alist<>();
+		l = l.add( 4 ).add( 3 ).add( 2 ).add( 1 );
+		
+		sum = l.foldl( ( Integer elem, Integer s ) -> s+elem, 0 );
+		
+		assertEquals( 10, sum );
+	}
 }
