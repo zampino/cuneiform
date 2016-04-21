@@ -24,7 +24,7 @@
 -vsn( "2.2.0-release" ).
 
 % API
--export( [main/1, file/2, start/3, reduce/4, get_vsn/0, format_result/1, format_error/1] ).
+-export( [main/1, file/2, start/3, reduce/3, reduce/4, get_vsn/0, format_result/1, format_error/1] ).
 
 
 -include( "cuneiform.hrl" ).
@@ -130,7 +130,7 @@ reduce( X0, {Rho, Mu, Gamma, Omega}, Cwd ) ->
         {failed, R2, R, Data} ->
           {AppLine, LamName} = hd( find_select( R, X1 ) ),
           throw( {AppLine, cuneiform, {R2, LamName, R, Data}} );
-          
+
 
         {finished, Summary} ->
           Ret = maps:get( ret, Summary ),
